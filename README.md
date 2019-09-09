@@ -10,4 +10,4 @@ $ python3 main.py
 
 
 ## Example
-*Coming Soon(maybe)*
+*Coming soon(maybe)*
