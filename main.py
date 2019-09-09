@@ -8,17 +8,18 @@ import cv2, math
 
 #y0, x0 - left_top
 #y1, x1 - right_bottom
-WIDTH, HEIGHT = 640, 360
+
 input_shape = (64, 64)
+
 font                   = cv2.FONT_HERSHEY_SIMPLEX
-fontScale              = 0.7
-fontColor              = (180,0,255)
+fontScale              = 0.5
+fontColor              = (150, 0, 150)
 lineType               = 2
 
-
-emotion_model_path = "models/mini_exception_0.00_64.hdf5"
 EMOTIONS = ["angry" ,"disgust","scared", "happy", "sad", "surprised",
  "neutral"]
+
+emotion_model_path = "models/mini_exception_0.00_64.hdf5"
 emotion_classifier = load_model(emotion_model_path, compile=False)
 
 csrt_tracker = None
@@ -41,6 +42,11 @@ def choose_face(event, mX, mY, flags, faces):
 cap = VideoStream(src=0).start()
 cv2.namedWindow('cam')
 
+frame = cap.read()
+HEIGHT, WIDTH = frame.shape[:2]
+WIDTH, HEIGHT = WIDTH // 3, HEIGHT // 3
+
+
 while True:
 	frame = cap.read()
 	frame = cv2.resize(frame, (WIDTH, HEIGHT))
@@ -56,16 +62,16 @@ while True:
 			x = 0 if x < 0 else (WIDTH-1 if x > WIDTH-1 else x)
 			y = 0 if y < 0 else (HEIGHT-1 if y > HEIGHT-1 else y)
 
-
-			cv2.rectangle(frame, (x, y), (x+w, y+h), (0,255,0), 2)
+			cv2.rectangle(frame, (x+5, y+5), (x+w, y+h), (0,255,0), 2)
 
 			roi = gray[y:y+h, x:x+w]
-			roi = cv2.resize(roi, input_shape)
+			roi = cv2.resize(roi, input_shape, interpolation=cv2.INTER_AREA)
 			roi = roi.astype("float") / 255.0
 			roi = img_to_array(roi)
 			roi = np.expand_dims(roi, axis=0)
 			preds = emotion_classifier.predict(roi)[0]
 			emotion = np.argmax(preds)
+
 
 			cv2.putText(frame, EMOTIONS[emotion] + "_%.f" % (preds[emotion]*100),
 					(x+w, y+h),
@@ -73,9 +79,19 @@ while True:
 					fontScale,
 					fontColor,
 					lineType)
+			cv2.putText(frame, "Press <C> on your keyboard",
+					(10, 15),
+					font,
+					fontScale,
+					fontColor,
+					lineType)
+			cv2.putText(frame, "if you want to choose other face",
+				(10, 30),
+					font,
+					fontScale,
+					fontColor,
+					lineType)
 		else:
-			print('Face dissapear!!')
-			print('Choose new face')
 			tracker_initiated = False
 
 	else:
@@ -84,14 +100,22 @@ while True:
 
 		for y0, x0, y1, x1 in faces:
 			cv2.rectangle(frame, (x0, y0), (x1, y1), (0,255,0), 2)
-			
 
-			
-
-			# cv2.rectangle(frame, (x0, y0), (x1, y1), (0,255,0), 3)
+		cv2.putText(frame, "Click on face you want to track",
+					(10, 15),
+					font,
+					fontScale,
+					fontColor,
+					lineType)
+	
 
 	cv2.imshow('cam', frame)
 
-	if cv2.waitKey(1) & 0xFF == ord('q'):
+	k = cv2.waitKey(1)
+
+	if k & 0xFF == ord('q'):
 		break
+
+	elif k & 0xFF == ord('c'):
+		tracker_initiated = False
 
