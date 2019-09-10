@@ -9,18 +9,25 @@ import cv2, math
 #y0, x0 - left_top
 #y1, x1 - right_bottom
 
-input_shape = (64, 64)
-
 font                   = cv2.FONT_HERSHEY_SIMPLEX
 fontScale              = 0.5
-fontColor              = (150, 0, 150)
+fontColor              = (180, 0, 150)
 lineType               = 2
 
 EMOTIONS = ["angry" ,"disgust","scared", "happy", "sad", "surprised",
  "neutral"]
 
-emotion_model_path = "models/mini_exception_0.00_64.hdf5"
+MODELS = { 'tiny_x' : 'tiny_exception_0.60_48.hdf5',
+ 			'mini_x' : 'mini_exception_0.00_64.hdf5',
+ 			'big_x' : 'big_exception_0.66_48.hdf5',
+ 			'simpler_cnn' : 'simpler_cnn_62_48.hdf5',
+ 			'simple_cnn' : 'simple_cnn_0.60_48.hdf5'
+ 		}
+
+emotion_model_path = "models/%s" % MODELS['tiny_x']
 emotion_classifier = load_model(emotion_model_path, compile=False)
+
+input_shape = emotion_classifier.layers[0].input_shape[1:3]
 
 csrt_tracker = None
 tracker_initiated = False
