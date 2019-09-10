@@ -114,7 +114,6 @@ while True:
 					fontScale,
 					fontColor,
 					lineType)
-	
 
 	cv2.imshow('cam', frame)
 
