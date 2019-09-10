@@ -9,6 +9,8 @@ import cv2, math
 #y0, x0 - left_top
 #y1, x1 - right_bottom
 
+frame_scale = 3
+
 font                   = cv2.FONT_HERSHEY_SIMPLEX
 fontScale              = 0.5
 fontColor              = (180, 0, 150)
@@ -51,7 +53,7 @@ cv2.namedWindow('cam')
 
 frame = cap.read()
 HEIGHT, WIDTH = frame.shape[:2]
-WIDTH, HEIGHT = WIDTH // 3, HEIGHT // 3
+WIDTH, HEIGHT = WIDTH // frame_scale, HEIGHT // frame_scale
 
 
 while True:
@@ -115,6 +117,8 @@ while True:
 					fontColor,
 					lineType)
 
+
+	frame = cv2.resize(frame, (WIDTH, HEIGHT))
 	cv2.imshow('cam', frame)
 
 	k = cv2.waitKey(1)
