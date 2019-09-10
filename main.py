@@ -9,7 +9,7 @@ import cv2, math
 #y0, x0 - left_top
 #y1, x1 - right_bottom
 
-frame_scale = 3
+WIDTH, HEIGHT = 640, 360
 
 font                   = cv2.FONT_HERSHEY_SIMPLEX
 fontScale              = 0.5
@@ -48,19 +48,13 @@ def choose_face(event, mX, mY, flags, faces):
 
 
 
-cap = VideoStream(src=0).start()
+cap = VideoStream(src=0, resolution=(WIDTH, HEIGHT)).start()
 cv2.namedWindow('cam')
-
-frame = cap.read()
-HEIGHT, WIDTH = frame.shape[:2]
-WIDTH, HEIGHT = WIDTH // frame_scale, HEIGHT // frame_scale
 
 
 while True:
 	frame = cap.read()
 	frame = cv2.resize(frame, (WIDTH, HEIGHT))
-	gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
 
 	if tracker_initiated:
 		success, box = csrt_tracker.update(frame)
@@ -73,6 +67,7 @@ while True:
 
 			cv2.rectangle(frame, (x+5, y+5), (x+w, y+h), (0,255,0), 2)
 
+			gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 			roi = gray[y:y+h, x:x+w]
 			roi = cv2.resize(roi, input_shape, interpolation=cv2.INTER_AREA)
 			roi = roi.astype("float") / 255.0
@@ -118,7 +113,6 @@ while True:
 					lineType)
 
 
-	frame = cv2.resize(frame, (WIDTH, HEIGHT))
 	cv2.imshow('cam', frame)
 
 	k = cv2.waitKey(1)
