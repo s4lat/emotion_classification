@@ -1,4 +1,4 @@
-sudo apt-get update && sudo apt-get upgrade
+sudo apt-get update && sudo apt-get upgrade -y
 sudo apt-get install -y build-essential cmake pkg-config
 sudo apt-get install -y libgtk2.0-dev libgtk-3-dev
 sudo apt-get install -y libboost-all-dev
