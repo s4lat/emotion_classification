@@ -10,13 +10,7 @@ sudo apt-get install -y libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
 sudo apt-get install -y libxvidcore-dev libx264-dev
 sudo apt-get install -y libcanberra-gtk*
 sudo apt-get install -y libatlas-base-dev gfortran
-sudo apt-get install -y python2.7-dev python3-dev
-
-
-
-sudo apt-get remove python3-pip
-wget https://bootstrap.pypa.io/get-pip.py
-python3 get-pip.py
+sudo apt-get install -y python2.7-dev python3-dev python3-pip
 
 
 
