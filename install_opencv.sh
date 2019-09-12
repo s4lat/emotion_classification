@@ -25,7 +25,7 @@ cmake -D CMAKE_BUILD_TYPE=RELEASE \
     -D CMAKE_SHARED_LINKER_FLAGS='-latomic' \
     -D BUILD_EXAMPLES=OFF ..
 
-make -j4
+make -j1
 
 sed -i 's/CONF_SWAPSIZE=1024/CONF_SWAPSIZE=100/g' /etc/dphys-swapfile
 /etc/init.d/dphys-swapfile restart
