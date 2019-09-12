@@ -1,8 +1,7 @@
 from face_recognition import face_locations
 from keras.models import load_model
 from keras.preprocessing.image import img_to_array
-from imutils.video import VideoStream
-import imutils
+from imutils.video import VideoStream, FPS
 import numpy as np
 import cv2, math
 
@@ -47,14 +46,18 @@ def choose_face(event, mX, mY, flags, faces):
 					tracker_initiated = True
 
 
-
-cap = VideoStream(src=0, resolution=(WIDTH, HEIGHT)).start()
 cv2.namedWindow('cam')
 
+cap = VideoStream(src=0, resolution=(WIDTH, HEIGHT)).start()
+
+fps = FPS().start()
+frame_ind = 0
+CURRENT_FPS = 0
 
 while True:
 	frame = cap.read()
 	frame = cv2.resize(frame, (WIDTH, HEIGHT))
+
 
 	if tracker_initiated:
 		success, box = csrt_tracker.update(frame)
@@ -112,6 +115,25 @@ while True:
 					fontColor,
 					lineType)
 
+
+	#Calculate fps
+	fps.update()
+	frame_ind += 1
+
+	#Refresh CURRENT_FPS every 10 frames
+	if (frame_ind == 10):
+		fps.stop()
+		CURRENT_FPS = fps.fps()
+		fps = FPS().start()
+		frame_ind = 0
+
+	#Draw fps
+	cv2.putText(frame, 'FPS: %.2f' % CURRENT_FPS,
+					(20, HEIGHT-20),
+					font,
+					fontScale,
+					fontColor,
+					lineType)
 
 	cv2.imshow('cam', frame)
 

@@ -1,7 +1,5 @@
-from imutils.video import VideoStream
-from imutils.video import FPS
-import numpy as np
-import cv2, imutils
+from imutils.video import VideoStream, FPS
+import cv2
 
 WIDTH, HEIGHT = 640, 360
 
@@ -14,18 +12,27 @@ lineType               = 2
 cv2.namedWindow('cam')
 
 cap = VideoStream(src=0, resolution=(WIDTH, HEIGHT)).start()
-fps = FPS().start()
 
-n_frames = 0
+fps = FPS().start()
+frame_ind = 0
+CURRENT_FPS = 0
 
 while True:
 	frame = cap.read()
 	frame = cv2.resize(frame, (WIDTH, HEIGHT))
 
+	#Calculate fps
 	fps.update()
-	fps.stop()
+	frame_ind += 1
 
-	cv2.putText(frame, 'FPS: %.2f' % fps.fps(),
+	#Refresh CURRENT_FPS every 10 frames
+	if (frame_ind == 10):
+		fps.stop()
+		CURRENT_FPS = fps.fps()
+		fps = FPS().start()
+		frame_ind = 0
+
+	cv2.putText(frame, 'FPS: %.2f' % CURRENT_FPS,
 					(20, 20),
 					font,
 					fontScale,
