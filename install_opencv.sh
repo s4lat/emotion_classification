@@ -1,4 +1,3 @@
-#Run this script not from project folder
 wget -O opencv.zip https://github.com/opencv/opencv/archive/4.1.1.zip
 unzip opencv.zip
 wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/4.1.1.zip
@@ -25,7 +24,7 @@ cmake -D CMAKE_BUILD_TYPE=RELEASE \
     -D CMAKE_SHARED_LINKER_FLAGS='-latomic' \
     -D BUILD_EXAMPLES=OFF .. \
     -D PYTHON3_EXECUTABLE=$(which python3) \
-    -D PYTHON_INCLUDE_DIR=$(python3 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())") \
+    -D PYTHON_INCLUDE_DpIR=$(python3 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())") \
   	-D PYTHON_INCLUDE_DIR2=$(python3 -c "from os.path import dirname; from distutils.sysconfig import get_config_h_filename; print(dirname(get_config_h_filename()))") \
   	-D PYTHON_LIBRARY=$(python3 -c "from distutils.sysconfig import get_config_var;from os.path import dirname,join ; print(join(dirname(get_config_var('LIBPC')),get_config_var('LDLIBRARY')))") \
   	-D PYTHON3_NUMPY_INCLUDE_DIRS=$(python3 -c "import numpy; print(numpy.get_include())") \
