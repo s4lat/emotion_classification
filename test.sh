@@ -1,2 +1,0 @@
-cd models
-ls
