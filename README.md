@@ -3,12 +3,15 @@
 $ git clone https://github.com/s4lat/emotion_classification
 
 ```
-## If you on raspberry execute install_rasp.sh
+## If you on raspberry:
+Execute install_opencv.sh, install_dlib.sh, install_python_modules.sh from root, all setup takes about 5-6 hours
 ```
-$ ./install_rasp.sh
+$ sudo -s
+$ ./install_opencv.sh && ./install_dlib.sh && ./install_python_modules.sh
 ```
 
-## If you on PC, install python3 modules from requirements.txt
+## If you on PC: 
+Install python3 modules from requirements.txt
 ```
 $ python3 -m pip install -r requirements.txt
 ```

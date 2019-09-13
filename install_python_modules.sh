@@ -1,0 +1,1 @@
+python3 -m pip install keras imutils face_recognition tensorflow
