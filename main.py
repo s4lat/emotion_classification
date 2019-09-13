@@ -102,11 +102,11 @@ frame_ind = 0
 CURRENT_FPS = 0
 
 while True:
-	r_frame = cap.read()
-	r_frame = cv2.resize(r_frame, (OUT_WIDTH, OUT_HEIGHT))
-	r_frame = cv2.flip(r_frame, 1)
+	out_frame = cap.read()
+	out_frame = cv2.resize(out_frame, (OUT_WIDTH, OUT_HEIGHT))
+	out_frame = cv2.flip(out_frame, 1)
 
-	frame = cv2.resize(r_frame, (IN_WIDTH, IN_HEIGHT))
+	frame = cv2.resize(out_frame, (IN_WIDTH, IN_HEIGHT))
 	gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
 	if tracker_initiated:
@@ -128,20 +128,20 @@ while True:
 
 			x, y, w, h = (x*SCALE_FACTOR, y*SCALE_FACTOR, w*SCALE_FACTOR, h*SCALE_FACTOR)
 
-			draw_border(r_frame, (x, y), (x+w, y+h), SELECTED_COLOR, 2, 5, 10)
-			cv2.putText(r_frame, EMOTIONS[emotion] + "_%.f" % (preds[emotion]*100),
+			draw_border(out_frame, (x, y), (x+w, y+h), SELECTED_COLOR, 2, 5, 10)
+			cv2.putText(out_frame, EMOTIONS[emotion] + "_%.f" % (preds[emotion]*100),
 					(x+w+10, y+h+10),
 					font,
 					fontScale,
 					fontColor,
 					lineType)
-			cv2.putText(r_frame, "Press <C> on your keyboard",
+			cv2.putText(out_frame, "Press <C> on your keyboard",
 					(10, 15),
 					font,
 					fontScale,
 					fontColor,
 					lineType)
-			cv2.putText(r_frame, "if you want to choose other face",
+			cv2.putText(out_frame, "if you want to choose other face",
 				(10, 30),
 					font,
 					fontScale,
@@ -154,7 +154,7 @@ while True:
 		faces = face_detector.detectMultiScale(gray)
 		for x, y, w, h in faces:
 			x, y, w, h = (x*SCALE_FACTOR, y*SCALE_FACTOR, w*SCALE_FACTOR, h*SCALE_FACTOR)
-			draw_border(r_frame, (x, y), (x+w, y+h), NOT_SELECTED_COLOR, 2, 5, 10)
+			draw_border(out_frame, (x, y), (x+w, y+h), NOT_SELECTED_COLOR, 2, 5, 10)
 
 		# faces = face_locations(gray)
 		# for y0, x1, y1, x0 in faces:
@@ -163,7 +163,7 @@ while True:
 		cv2.setMouseCallback('cam', choose_face, faces)
 
 
-		cv2.putText(r_frame, "Click on face you want to track",
+		cv2.putText(out_frame, "Click on face you want to track",
 					(10, 15),
 					font,
 					fontScale,
@@ -182,14 +182,14 @@ while True:
 		frame_ind = 0
 
 	#Draw fps
-	cv2.putText(r_frame, 'FPS: %.2f' % CURRENT_FPS,
+	cv2.putText(out_frame, 'FPS: %.2f' % CURRENT_FPS,
 					(20, IN_HEIGHT-20),
 					font,
 					fontScale,
 					fontColor,
 					lineType)
 
-	cv2.imshow('cam', r_frame)
+	cv2.imshow('cam', out_frame)
 
 	k = cv2.waitKey(1)
 
