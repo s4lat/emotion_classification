@@ -3,7 +3,7 @@ from keras.models import load_model
 from keras.preprocessing.image import img_to_array
 from imutils.video import VideoStream, FPS
 import numpy as np
-import cv2, argparse
+import cv2, argparse, sys
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--res', metavar='N', type=int, nargs=2,
@@ -16,16 +16,8 @@ parser.add_argument('--model', default="mini_x",
 
 args = parser.parse_args()
 
-
-OUT_WIDTH, OUT_HEIGHT = args.res
+WIDTH, HEIGHT = args.res
 model = args.model
-
-IN_WIDTH, IN_HEIGHT = OUT_WIDTH, OUT_HEIGHT
-
-if (OUT_WIDTH+OUT_HEIGHT >= 1000):
-	IN_WIDTH, IN_HEIGHT = OUT_WIDTH//2, OUT_HEIGHT//2
-
-SCALE_FACTOR = OUT_WIDTH // IN_WIDTH 
 
 NOT_SELECTED_COLOR = (0, 200, 0)[::-1] #RGB to BGR
 SELECTED_COLOR = (255, 140, 0)[::-1]
@@ -55,9 +47,7 @@ csrt_tracker = None
 tracker_initiated = False
 
 def choose_face(event, mX, mY, flags, faces):
-	global tracker_initiated, csrt_tracker, gray
-	
-	mX, mY = (mX//SCALE_FACTOR, mY//SCALE_FACTOR)
+	global tracker_initiated, csrt_tracker
 
 	if not tracker_initiated:
 		if event == cv2.EVENT_LBUTTONUP and len(faces) > 0:
@@ -65,7 +55,7 @@ def choose_face(event, mX, mY, flags, faces):
 				if (x <= mX <= x+w) and (y <= mY <= y+h):
 					face_bb = (x, y, w, h)
 					csrt_tracker = cv2.TrackerCSRT_create()
-					csrt_tracker.init(gray, face_bb)
+					csrt_tracker.init(frame, face_bb)
 					tracker_initiated = True
 
 def draw_border(img, pt1, pt2, color, thickness, r, d):
@@ -95,28 +85,29 @@ def draw_border(img, pt1, pt2, color, thickness, r, d):
 
 cv2.namedWindow('cam')
 
-cap = VideoStream(src=0, resolution=(OUT_WIDTH, OUT_HEIGHT)).start()
+cap = VideoStream(src=0, resolution=(WIDTH, HEIGHT)).start()
 
 fps = FPS().start()
 frame_ind = 0
 CURRENT_FPS = 0
 
 while True:
-	r_frame = cap.read()
-	r_frame = cv2.resize(r_frame, (OUT_WIDTH, OUT_HEIGHT))
-	r_frame = cv2.flip(r_frame, 1)
-
-	frame = cv2.resize(r_frame, (IN_WIDTH, IN_HEIGHT))
+	frame = cap.read()
+	frame = cv2.resize(frame, (WIDTH, HEIGHT))
+	frame = cv2.flip(frame, 1)
 	gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
 	if tracker_initiated:
-		success, box = csrt_tracker.update(gray)
+		success, box = csrt_tracker.update(frame)
 
 		if success:
 			x, y, w, h = [int(i) for i in box]
 
-			x = 0 if x < 0 else (IN_WIDTH-1 if x > IN_WIDTH-1 else x)
-			y = 0 if y < 0 else (IN_HEIGHT-1 if y > IN_HEIGHT-1 else y)
+			x = 0 if x < 0 else (WIDTH-1 if x > WIDTH-1 else x)
+			y = 0 if y < 0 else (HEIGHT-1 if y > HEIGHT-1 else y)
+
+			# cv2.rectangle(frame, (x+5, y+5), (x+w, y+h), (0,255,0), 2)
+			draw_border(frame, (x, y), (x+w, y+h), SELECTED_COLOR, 2, 5, 10)
 
 			roi = gray[y:y+h, x:x+w]
 			roi = cv2.resize(roi, input_shape, interpolation=cv2.INTER_AREA)
@@ -126,22 +117,19 @@ while True:
 			preds = emotion_classifier.predict(roi)[0]
 			emotion = np.argmax(preds)
 
-			x, y, w, h = (x*SCALE_FACTOR, y*SCALE_FACTOR, w*SCALE_FACTOR, h*SCALE_FACTOR)
-
-			draw_border(r_frame, (x, y), (x+w, y+h), SELECTED_COLOR, 2, 5, 10)
-			cv2.putText(r_frame, EMOTIONS[emotion] + "_%.f" % (preds[emotion]*100),
+			cv2.putText(frame, EMOTIONS[emotion] + "_%.f" % (preds[emotion]*100),
 					(x+w+10, y+h+10),
 					font,
 					fontScale,
 					fontColor,
 					lineType)
-			cv2.putText(r_frame, "Press <C> on your keyboard",
+			cv2.putText(frame, "Press <C> on your keyboard",
 					(10, 15),
 					font,
 					fontScale,
 					fontColor,
 					lineType)
-			cv2.putText(r_frame, "if you want to choose other face",
+			cv2.putText(frame, "if you want to choose other face",
 				(10, 30),
 					font,
 					fontScale,
@@ -153,8 +141,7 @@ while True:
 	else:
 		faces = face_detector.detectMultiScale(gray)
 		for x, y, w, h in faces:
-			x, y, w, h = (x*SCALE_FACTOR, y*SCALE_FACTOR, w*SCALE_FACTOR, h*SCALE_FACTOR)
-			draw_border(r_frame, (x, y), (x+w, y+h), NOT_SELECTED_COLOR, 2, 5, 10)
+			draw_border(frame, (x, y), (x+w, y+h), NOT_SELECTED_COLOR, 2, 5, 10)
 
 		# faces = face_locations(gray)
 		# for y0, x1, y1, x0 in faces:
@@ -163,7 +150,7 @@ while True:
 		cv2.setMouseCallback('cam', choose_face, faces)
 
 
-		cv2.putText(r_frame, "Click on face you want to track",
+		cv2.putText(frame, "Click on face you want to track",
 					(10, 15),
 					font,
 					fontScale,
@@ -182,14 +169,14 @@ while True:
 		frame_ind = 0
 
 	#Draw fps
-	cv2.putText(r_frame, 'FPS: %.2f' % CURRENT_FPS,
-					(20, IN_HEIGHT-20),
+	cv2.putText(frame, 'FPS: %.2f' % CURRENT_FPS,
+					(20, HEIGHT-20),
 					font,
 					fontScale,
 					fontColor,
 					lineType)
 
-	cv2.imshow('cam', r_frame)
+	cv2.imshow('cam', frame)
 
 	k = cv2.waitKey(1)
 
