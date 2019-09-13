@@ -6,8 +6,6 @@ import numpy as np
 import cv2, argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--res', metavar='N', type=int, nargs=2,
-                    help='resolution w h', default=(640, 360))
 parser.add_argument('--model', default="mini_x",
                     help='model name')
 
@@ -15,17 +13,13 @@ parser.add_argument('--model', default="mini_x",
 #y1, x1 - right_bottom
 
 args = parser.parse_args()
-
-
-OUT_WIDTH, OUT_HEIGHT = args.res
 model = args.model
 
-IN_WIDTH, IN_HEIGHT = OUT_WIDTH, OUT_HEIGHT
+OUT_WIDTH, OUT_HEIGHT = 640, 360
 
-if (OUT_WIDTH+OUT_HEIGHT >= 1000):
-	IN_WIDTH, IN_HEIGHT = OUT_WIDTH//2, OUT_HEIGHT//2
+IN_WIDTH, IN_HEIGHT = 320, 180
 
-SCALE_FACTOR = OUT_WIDTH // IN_WIDTH 
+SCALE_FACTOR = 2
 
 NOT_SELECTED_COLOR = (0, 200, 0)[::-1] #RGB to BGR
 SELECTED_COLOR = (255, 140, 0)[::-1]
@@ -64,7 +58,7 @@ def choose_face(event, mX, mY, flags, faces):
 			for x, y, w, h in faces:
 				if (x <= mX <= x+w) and (y <= mY <= y+h):
 					face_bb = (x, y, w, h)
-					csrt_tracker = cv2.TrackerCSRT_create()
+					csrt_tracker = cv2.TrackerMOSSE_create()
 					csrt_tracker.init(gray, face_bb)
 					tracker_initiated = True
 
@@ -153,15 +147,29 @@ while True:
 	else:
 		faces = face_detector.detectMultiScale(gray)
 		for x, y, w, h in faces:
+			roi = gray[y:y+h, x:x+w]
+			roi = cv2.resize(roi, input_shape, interpolation=cv2.INTER_AREA)
+			roi = roi.astype("float") / 255.0
+			roi = img_to_array(roi)
+			roi = np.expand_dims(roi, axis=0)
+			preds = emotion_classifier.predict(roi)[0]
+			emotion = np.argmax(preds)
+
 			x, y, w, h = (x*SCALE_FACTOR, y*SCALE_FACTOR, w*SCALE_FACTOR, h*SCALE_FACTOR)
-			draw_border(out_frame, (x, y), (x+w, y+h), NOT_SELECTED_COLOR, 2, 5, 10)
+
+			draw_border(out_frame, (x, y), (x+w, y+h), SELECTED_COLOR, 2, 5, 10)
+			cv2.putText(out_frame, EMOTIONS[emotion] + "_%.f" % (preds[emotion]*100),
+					(x+w+10, y+h+10),
+					font,
+					fontScale,
+					fontColor,
+					lineType)
 
 		# faces = face_locations(gray)
 		# for y0, x1, y1, x0 in faces:
 		# 	draw_border(frame, (x0, y0), (x1, y1), NOT_SELECTED_COLOR, 2, 5, 10)
 
 		cv2.setMouseCallback('cam', choose_face, faces)
-
 
 		cv2.putText(out_frame, "Click on face you want to track",
 					(10, 15),

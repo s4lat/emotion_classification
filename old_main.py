@@ -54,7 +54,7 @@ def choose_face(event, mX, mY, flags, faces):
 			for x, y, w, h in faces:
 				if (x <= mX <= x+w) and (y <= mY <= y+h):
 					face_bb = (x, y, w, h)
-					csrt_tracker = cv2.TrackerCSRT_create()
+					csrt_tracker = cv2.TrackerMOSSE_create()
 					csrt_tracker.init(frame, face_bb)
 					tracker_initiated = True
 
