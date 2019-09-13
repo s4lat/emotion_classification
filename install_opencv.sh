@@ -13,6 +13,8 @@ cd build
 sed -i 's/CONF_SWAPSIZE=100/CONF_SWAPSIZE=1024/g' /etc/dphys-swapfile
 /etc/init.d/dphys-swapfile restart
 
+python3 -m pip install numpy
+
 cmake -D CMAKE_BUILD_TYPE=RELEASE \
     -D CMAKE_INSTALL_PREFIX=/usr/local \
     -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib-4.1.1/modules \
