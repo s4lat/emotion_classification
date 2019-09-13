@@ -8,7 +8,6 @@ fontScale              = 0.5
 fontColor              = (180, 0, 150)
 lineType               = 2
 
-
 cv2.namedWindow('cam')
 
 cap = VideoStream(src=0, resolution=(WIDTH, HEIGHT)).start()
@@ -20,6 +19,7 @@ CURRENT_FPS = 0
 while True:
 	frame = cap.read()
 	frame = cv2.resize(frame, (WIDTH, HEIGHT))
+	gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
 	#Calculate fps
 	fps.update()
