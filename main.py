@@ -3,12 +3,23 @@ from keras.models import load_model
 from keras.preprocessing.image import img_to_array
 from imutils.video import VideoStream, FPS
 import numpy as np
-import cv2
+import cv2, argparse, sys
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--res', metavar='N', type=int, nargs=2,
+                    help='resolution w h', default=(640, 360))
+parser.add_argument('--model', default="mini_x",
+                    help='model name')
 
 #y0, x0 - left_top
 #y1, x1 - right_bottom
 
-WIDTH, HEIGHT = 640, 360
+args = parser.parse_args()
+
+
+WIDTH, HEIGHT = args.res
+model = args.model
+
 
 NOT_SELECTED_COLOR = (0, 200, 0)[::-1] #RGB to BGR
 SELECTED_COLOR = (255, 140, 0)[::-1]
@@ -28,7 +39,7 @@ MODELS = { 'tiny_x' : 'tiny_exception_0.60_48.hdf5',
  			'simple_cnn' : 'simple_cnn_0.60_48.hdf5'
  		}
 
-emotion_model_path = "models/%s" % MODELS['big_x']
+emotion_model_path = "models/%s" % MODELS[model]
 emotion_classifier = load_model(emotion_model_path, compile=False)
 
 input_shape = emotion_classifier.layers[0].input_shape[1:3]
