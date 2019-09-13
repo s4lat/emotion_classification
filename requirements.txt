@@ -1,5 +1,4 @@
 opencv_contrib_python
-Keras
-face_recognition
 imutils
+Keras
 numpy

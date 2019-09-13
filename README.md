@@ -7,7 +7,7 @@ $ git clone https://github.com/s4lat/emotion_classification
 Execute install_opencv.sh, install_dlib.sh, install_python_modules.sh from root, all setup takes about 5-6 hours
 ```
 $ sudo -s
-$ ./install_opencv.sh && ./install_dlib.sh && ./install_python_modules.sh
+$ ./install_opencv.sh && ./install_python_modules.sh
 ```
 
 ## If you on PC: 
