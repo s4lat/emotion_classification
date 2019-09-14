@@ -6,13 +6,17 @@
 #
 # WARNING! All changes made in this file will be lost!
 from keras.preprocessing.image import img_to_array
-from PyQt5 import QtCore, QtGui, QtWidgets
 from imutils.video import VideoStream, FPS
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
 import queue, threading, cv2
-import numpy as np
 from utils import *
+import numpy as np
 
-class FrameWidget(QtWidgets.QWidget):
+
+
+class FrameWidget(QWidget):
     def __init__(self, parent=None):
         super(FrameWidget, self).__init__(parent)
         self.parent = parent
@@ -25,10 +29,10 @@ class FrameWidget(QtWidgets.QWidget):
         self.update()
 
     def paintEvent(self, event):
-        qp = QtGui.QPainter()
+        qp = QPainter()
         qp.begin(self)
         if self.cam_frame:
-            qp.drawImage(QtCore.QPoint(0, 0), self.cam_frame)
+            qp.drawImage(QPoint(0, 0), self.cam_frame)
         qp.end()
 
     def click(self, event):
@@ -36,7 +40,7 @@ class FrameWidget(QtWidgets.QWidget):
         coords = (coords.x(), coords.y())
         self.parent.chooseFace(coords)
 
-class TestWidget(QtWidgets.QWidget):
+class TestWidget(QWidget):
     def __init__(self, cfg, face_detector, emotion_classifier, parent=None):
         super(TestWidget, self).__init__(parent)
 
@@ -55,7 +59,7 @@ class TestWidget(QtWidgets.QWidget):
         self.capture_thread = threading.Thread(target=self.grab, args = (0, self.q, self.cfg.OUT_WIDTH, self.cfg.OUT_HEIGHT))
         self.capture_thread.start()
 
-        self.timer = QtCore.QTimer(self)
+        self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_frame)
         self.timer.start(1)
 
@@ -162,7 +166,7 @@ class TestWidget(QtWidgets.QWidget):
 
             height, width, bpc = img.shape
             bpl = bpc * width
-            img = QtGui.QImage(img, width, height, bpl, QtGui.QImage.Format_RGB888)
+            img = QImage(img, width, height, bpl, QImage.Format_RGB888)
             self.camForm.set_frame(img)
 
     def closeEvent(self, event):
@@ -172,35 +176,35 @@ class TestWidget(QtWidgets.QWidget):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(664, 552)
-        self.gridLayout = QtWidgets.QGridLayout(Form)
+        self.gridLayout = QGridLayout(Form)
         self.gridLayout.setObjectName("gridLayout")
-        self.backBtn = QtWidgets.QPushButton(Form)
+        self.backBtn = QPushButton(Form)
         self.backBtn.setEnabled(True)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Maximum)
+        sizePolicy = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.backBtn.sizePolicy().hasHeightForWidth())
         self.backBtn.setSizePolicy(sizePolicy)
-        self.backBtn.setMinimumSize(QtCore.QSize(50, 50))
-        self.backBtn.setMaximumSize(QtCore.QSize(50, 50))
-        font = QtGui.QFont()
+        self.backBtn.setMinimumSize(QSize(50, 50))
+        self.backBtn.setMaximumSize(QSize(50, 50))
+        font = QFont()
         font.setPointSize(16)
         self.backBtn.setFont(font)
         self.backBtn.setObjectName("backBtn")
         self.gridLayout.addWidget(self.backBtn, 0, 0, 1, 1)
-        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
         self.gridLayout.addItem(spacerItem, 0, 1, 1, 1)
         self.camForm = FrameWidget(Form)
-        self.camForm.setMinimumSize(QtCore.QSize(640, 480))
-        self.camForm.setMaximumSize(QtCore.QSize(640, 480))
+        self.camForm.setMinimumSize(QSize(640, 480))
+        self.camForm.setMaximumSize(QSize(640, 480))
         self.camForm.setObjectName("camForm")
         self.gridLayout.addWidget(self.camForm, 1, 0, 1, 2)
 
         self.retranslateUi(Form)
-        QtCore.QMetaObject.connectSlotsByName(Form)
+        QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
-        _translate = QtCore.QCoreApplication.translate
+        _translate = QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
         self.backBtn.setText(_translate("Form", "B"))
 
@@ -208,8 +212,8 @@ class TestWidget(QtWidgets.QWidget):
 
 if __name__ == "__main__":
     import sys
-    app = QtWidgets.QApplication(sys.argv)
-    Form = QtWidgets.QWidget()
+    app = QApplication(sys.argv)
+    Form = QWidget()
     ui = TestWidget()
     ui.setupUi(Form)
     Form.show()
