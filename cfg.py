@@ -18,6 +18,8 @@ CURR_MODEL = 'mini_x'
 EMOTIONS = ["angry" ,"disgust","scared", "happy", "sad", "surprised",
  "neutral"]
 
+USE_HOG = False
+
 font                   = cv2.FONT_HERSHEY_SIMPLEX
 fontScale              = 0.5
 fontColor              = (255, 255, 255)[::-1]

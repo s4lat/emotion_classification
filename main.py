@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from functools import partial
 from keras.models import load_model
-import cfg, cv2
+import cfg, cv2, dlib
 
 class MainWindow(QMainWindow):
 	def __init__(self):
