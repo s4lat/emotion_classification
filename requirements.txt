@@ -1,4 +1,5 @@
-opencv_contrib_python
 imutils
-Keras
 numpy
+Keras
+opencv_contrib_python
+PyQt5
