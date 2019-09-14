@@ -1,4 +1,4 @@
-wget -o pyqt5.tar.gz https://www.riverbankcomputing.com/static/Downloads/PyQt5/5.13.1/PyQt5_gpl-5.13.1.tar.gz
+wget -O pyqt5.tar.gz https://www.riverbankcomputing.com/static/Downloads/PyQt5/5.13.1/PyQt5_gpl-5.13.1.tar.gz
 tar -xf pyqt5.tar.gz
 
 rm -rf pyqt5.tar.gz
