@@ -205,269 +205,267 @@ class TestWidget(QWidget):
 
 
     def setupUi(self, Form):
-        Form.setObjectName("Form")
-        Form.resize(854, 577)
-        sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(Form.sizePolicy().hasHeightForWidth())
-        Form.setSizePolicy(sizePolicy)
-        Form.setMinimumSize(QSize(854, 577))
-        Form.setMaximumSize(QSize(854, 610))
-        Form.setLayoutDirection(Qt.LeftToRight)
-        Form.setAutoFillBackground(False)
-        self.gridLayout = QGridLayout(Form)
-        self.gridLayout.setSizeConstraint(QLayout.SetDefaultConstraint)
-        self.gridLayout.setContentsMargins(12, 12, 12, 100)
-        self.gridLayout.setHorizontalSpacing(10)
-        self.gridLayout.setObjectName("gridLayout")
-        self.horizontalLayout_2 = QHBoxLayout()
-        self.horizontalLayout_2.setSpacing(10)
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.backBtn = QPushButton(Form)
-        self.backBtn.setEnabled(True)
-        sizePolicy = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.backBtn.sizePolicy().hasHeightForWidth())
-        self.backBtn.setSizePolicy(sizePolicy)
-        self.backBtn.setMinimumSize(QSize(64, 64))
-        self.backBtn.setMaximumSize(QSize(64, 64))
-        font = QFont()
-        font.setPointSize(32)
-        self.backBtn.setFont(font)
-        self.backBtn.setLayoutDirection(Qt.LeftToRight)
-        self.backBtn.setStyleSheet("")
-        self.backBtn.setObjectName("backBtn")
-        self.horizontalLayout_2.addWidget(self.backBtn)
-        self.camLabel = QLabel(Form)
-        self.camLabel.setMinimumSize(QSize(0, 43))
-        self.camLabel.setMaximumSize(QSize(16777215, 43))
-        self.camLabel.setStyleSheet("border: 2px solid gray;\n"
-"")
-        self.camLabel.setObjectName("camLabel")
-        self.horizontalLayout_2.addWidget(self.camLabel)
-        self.gridLayout.addLayout(self.horizontalLayout_2, 3, 3, 1, 1)
-        self.label = QLabel(Form)
-        self.label.setObjectName("label")
-        self.gridLayout.addWidget(self.label, 3, 4, 1, 1)
-        spacerItem = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-        self.gridLayout.addItem(spacerItem, 2, 0, 1, 1)
-        spacerItem1 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
-        self.gridLayout.addItem(spacerItem1, 0, 3, 1, 1)
-        self.camForm = FrameWidget(Form)
-        self.camForm.setMinimumSize(QSize(640, 360))
-        self.camForm.setMaximumSize(QSize(640, 360))
-        self.camForm.setStyleSheet("border: 2px solid gray")
-        self.camForm.setObjectName("camForm")
-        self.gridLayout.addWidget(self.camForm, 4, 3, 1, 1)
-        self.verticalLayout = QVBoxLayout()
-        self.verticalLayout.setContentsMargins(10, 0, 10, 30)
-        self.verticalLayout.setSpacing(5)
-        self.verticalLayout.setObjectName("verticalLayout")
-        self.happyLabel = QLabel(Form)
-        self.happyLabel.setMaximumSize(QSize(150, 32))
-        font = QFont()
-        font.setPointSize(16)
-        self.happyLabel.setFont(font)
-        self.happyLabel.setAlignment(Qt.AlignBottom|Qt.AlignHCenter)
-        self.happyLabel.setObjectName("happyLabel")
-        self.verticalLayout.addWidget(self.happyLabel)
-        self.happyBar = QProgressBar(Form)
-        self.happyBar.setMinimumSize(QSize(150, 16))
-        self.happyBar.setMaximumSize(QSize(150, 20))
-        self.happyBar.setStyleSheet("QProgressBar{\n"
-"    background-color: rgb(245, 245, 245);\n"
-"    border: 2px solid black;\n"
-"    border-radius: 5px;\n"
-"    text-align: center\n"
-"}\n"
-"\n"
-"QProgressBar::chunk {\n"
-"     background-color: #FFA52C;\n"
-" }")
-        self.happyBar.setProperty("value", 24)
-        self.happyBar.setObjectName("happyBar")
-        self.verticalLayout.addWidget(self.happyBar)
-        self.surpriseLabel = QLabel(Form)
-        self.surpriseLabel.setMaximumSize(QSize(150, 32))
-        font = QFont()
-        font.setPointSize(16)
-        self.surpriseLabel.setFont(font)
-        self.surpriseLabel.setAlignment(Qt.AlignBottom|Qt.AlignHCenter)
-        self.surpriseLabel.setObjectName("surpriseLabel")
-        self.verticalLayout.addWidget(self.surpriseLabel)
-        self.surpriseBar = QProgressBar(Form)
-        self.surpriseBar.setMinimumSize(QSize(150, 16))
-        self.surpriseBar.setMaximumSize(QSize(150, 20))
-        self.surpriseBar.setStyleSheet("QProgressBar{\n"
-"    background-color: rgb(245, 245, 245);\n"
-"    border: 2px solid black;\n"
-"    border-radius: 5px;\n"
-"    text-align: center\n"
-"}\n"
-"\n"
-"QProgressBar::chunk {\n"
-"     background-color: #FFFF41;\n"
-" }")
-        self.surpriseBar.setProperty("value", 24)
-        self.surpriseBar.setObjectName("surpriseBar")
-        self.verticalLayout.addWidget(self.surpriseBar)
-        self.neutralLabel = QLabel(Form)
-        self.neutralLabel.setMaximumSize(QSize(150, 32))
-        font = QFont()
-        font.setPointSize(16)
-        self.neutralLabel.setFont(font)
-        self.neutralLabel.setAlignment(Qt.AlignBottom|Qt.AlignHCenter)
-        self.neutralLabel.setObjectName("neutralLabel")
-        self.verticalLayout.addWidget(self.neutralLabel)
-        self.neutralBar = QProgressBar(Form)
-        self.neutralBar.setMinimumSize(QSize(150, 16))
-        self.neutralBar.setMaximumSize(QSize(150, 20))
-        self.neutralBar.setStyleSheet("QProgressBar{\n"
-"    background-color: rgb(245, 245, 245);\n"
-"    border: 2px solid black;\n"
-"    border-radius: 5px;\n"
-"    text-align: center\n"
-"}\n"
-"\n"
-"QProgressBar::chunk {\n"
-"     background-color: #008018;\n"
-" }")
-        self.neutralBar.setProperty("value", 24)
-        self.neutralBar.setObjectName("neutralBar")
-        self.verticalLayout.addWidget(self.neutralBar)
-        self.sadLabel = QLabel(Form)
-        self.sadLabel.setMaximumSize(QSize(150, 32))
-        font = QFont()
-        font.setPointSize(16)
-        self.sadLabel.setFont(font)
-        self.sadLabel.setAlignment(Qt.AlignBottom|Qt.AlignHCenter)
-        self.sadLabel.setObjectName("sadLabel")
-        self.verticalLayout.addWidget(self.sadLabel)
-        self.sadBar = QProgressBar(Form)
-        self.sadBar.setMinimumSize(QSize(150, 16))
-        self.sadBar.setMaximumSize(QSize(150, 20))
-        self.sadBar.setStyleSheet("QProgressBar{\n"
-"    background-color: rgb(245, 245, 245);\n"
-"    border: 2px solid black;\n"
-"    border-radius: 5px;\n"
-"    text-align: center\n"
-"}\n"
-"\n"
-"QProgressBar::chunk {\n"
-"     background-color: rgb(0, 93, 255);\n"
-" }")
-        self.sadBar.setProperty("value", 24)
-        self.sadBar.setObjectName("sadBar")
-        self.verticalLayout.addWidget(self.sadBar)
-        self.scaredLabel = QLabel(Form)
-        self.scaredLabel.setMaximumSize(QSize(150, 32))
-        font = QFont()
-        font.setPointSize(16)
-        self.scaredLabel.setFont(font)
-        self.scaredLabel.setAlignment(Qt.AlignBottom|Qt.AlignHCenter)
-        self.scaredLabel.setObjectName("scaredLabel")
-        self.verticalLayout.addWidget(self.scaredLabel)
-        self.scaredBar = QProgressBar(Form)
-        self.scaredBar.setMinimumSize(QSize(150, 16))
-        self.scaredBar.setMaximumSize(QSize(150, 20))
-        self.scaredBar.setStyleSheet("QProgressBar{\n"
-"    background-color: rgb(245, 245, 245);\n"
-"    border: 2px solid black;\n"
-"    border-radius: 5px;\n"
-"    text-align: center\n"
-"}\n"
-"\n"
-"\n"
-"QProgressBar::chunk {\n"
-"     background-color: #86007D;\n"
-" }")
-        self.scaredBar.setProperty("value", 24)
-        self.scaredBar.setObjectName("scaredBar")
-        self.verticalLayout.addWidget(self.scaredBar)
-        self.disgustLabel = QLabel(Form)
-        self.disgustLabel.setMaximumSize(QSize(150, 32))
-        font = QFont()
-        font.setPointSize(16)
-        self.disgustLabel.setFont(font)
-        self.disgustLabel.setAlignment(Qt.AlignBottom|Qt.AlignHCenter)
-        self.disgustLabel.setObjectName("disgustLabel")
-        self.verticalLayout.addWidget(self.disgustLabel)
-        self.disgustBar = QProgressBar(Form)
-        self.disgustBar.setMinimumSize(QSize(150, 16))
-        self.disgustBar.setMaximumSize(QSize(150, 20))
-        self.disgustBar.setStyleSheet("QProgressBar{\n"
-"    background-color: rgb(245, 245, 245);\n"
-"    border: 2px solid black;\n"
-"    border-radius: 5px;\n"
-"    text-align: center\n"
-"}\n"
-"\n"
-"QProgressBar::chunk {\n"
-"     background-color: #7F370A;\n"
-" }")
-        self.disgustBar.setProperty("value", 24)
-        self.disgustBar.setObjectName("disgustBar")
-        self.verticalLayout.addWidget(self.disgustBar)
-        self.angryLabel = QLabel(Form)
-        self.angryLabel.setMaximumSize(QSize(150, 32))
-        font = QFont()
-        font.setPointSize(16)
-        self.angryLabel.setFont(font)
-        self.angryLabel.setAlignment(Qt.AlignBottom|Qt.AlignHCenter)
-        self.angryLabel.setObjectName("angryLabel")
-        self.verticalLayout.addWidget(self.angryLabel)
-        self.angryBar = QProgressBar(Form)
-        self.angryBar.setMinimumSize(QSize(150, 16))
-        self.angryBar.setMaximumSize(QSize(150, 20))
-        self.angryBar.setStyleSheet("QProgressBar{\n"
-"    background-color: rgb(245, 245, 245);\n"
-"    border: 2px solid black;\n"
-"    border-radius: 5px;\n"
-"    text-align: center\n"
-"}\n"
-" \n"
-"QProgressBar::chunk {\n"
-"     background-color: #FF0018;\n"
-" }")
-        self.angryBar.setProperty("value", 24)
-        self.angryBar.setObjectName("angryBar")
-        self.verticalLayout.addWidget(self.angryBar)
-        self.resetBtn = QPushButton(Form)
-        self.resetBtn.setEnabled(False)
-        sizePolicy = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.resetBtn.sizePolicy().hasHeightForWidth())
-        self.resetBtn.setSizePolicy(sizePolicy)
-        self.resetBtn.setMinimumSize(QSize(150, 50))
-        self.resetBtn.setMaximumSize(QSize(150, 50))
-        font = QFont()
-        font.setPointSize(16)
-        self.resetBtn.setFont(font)
-        self.resetBtn.setObjectName("resetBtn")
-        self.verticalLayout.addWidget(self.resetBtn)
-        self.gridLayout.addLayout(self.verticalLayout, 4, 4, 3, 1)
-        self.resetBtn.clicked.connect(self.resetFace)
-
-        self.retranslateUi(Form)
-        QMetaObject.connectSlotsByName(Form)
+            Form.setObjectName("Form")
+            Form.resize(916, 503)
+            sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+            sizePolicy.setHorizontalStretch(0)
+            sizePolicy.setVerticalStretch(0)
+            sizePolicy.setHeightForWidth(Form.sizePolicy().hasHeightForWidth())
+            Form.setSizePolicy(sizePolicy)
+            Form.setMaximumSize(QSize(916, 503))
+            self.gridLayout = QGridLayout(Form)
+            self.gridLayout.setObjectName("gridLayout")
+            self.backBtn = QPushButton(Form)
+            self.backBtn.setEnabled(True)
+            sizePolicy = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
+            sizePolicy.setHorizontalStretch(0)
+            sizePolicy.setVerticalStretch(0)
+            sizePolicy.setHeightForWidth(self.backBtn.sizePolicy().hasHeightForWidth())
+            self.backBtn.setSizePolicy(sizePolicy)
+            self.backBtn.setMinimumSize(QSize(64, 64))
+            self.backBtn.setMaximumSize(QSize(16777215, 16777215))
+            font = QFont()
+            font.setPointSize(32)
+            self.backBtn.setFont(font)
+            self.backBtn.setLayoutDirection(Qt.LeftToRight)
+            self.backBtn.setStyleSheet("")
+            self.backBtn.setObjectName("backBtn")
+            self.gridLayout.addWidget(self.backBtn, 1, 0, 1, 1)
+            self.camLabel = QLabel(Form)
+            self.camLabel.setMinimumSize(QSize(0, 48))
+            self.camLabel.setMaximumSize(QSize(16777215, 16777215))
+            self.camLabel.setStyleSheet("border: 2px solid gray;\n"
+    "")
+            self.camLabel.setObjectName("camLabel")
+            self.gridLayout.addWidget(self.camLabel, 1, 1, 1, 1)
+            self.label_2 = QLabel(Form)
+            self.label_2.setStyleSheet("border: 2px solid gray;")
+            self.label_2.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+            self.label_2.setObjectName("label_2")
+            self.gridLayout.addWidget(self.label_2, 1, 3, 1, 1)
+            self.resetBtn = QPushButton(Form)
+            self.resetBtn.setEnabled(False)
+            sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+            sizePolicy.setHorizontalStretch(0)
+            sizePolicy.setVerticalStretch(0)
+            sizePolicy.setHeightForWidth(self.resetBtn.sizePolicy().hasHeightForWidth())
+            self.resetBtn.setSizePolicy(sizePolicy)
+            self.resetBtn.setMinimumSize(QSize(150, 50))
+            self.resetBtn.setMaximumSize(QSize(16777215, 16777215))
+            font = QFont()
+            font.setPointSize(16)
+            self.resetBtn.setFont(font)
+            self.resetBtn.setObjectName("resetBtn")
+            self.gridLayout.addWidget(self.resetBtn, 5, 1, 1, 1)
+            self.camForm = FrameWidget(Form)
+            self.camForm.setMinimumSize(QSize(640, 360))
+            self.camForm.setMaximumSize(QSize(640, 360))
+            self.camForm.setStyleSheet("border: 2px solid gray")
+            self.camForm.setObjectName("camForm")
+            self.gridLayout.addWidget(self.camForm, 4, 1, 1, 1)
+            self.predsWidget = QWidget(Form)
+            self.predsWidget.setStyleSheet("#predsWidget {\n"
+    "    border: 2px solid gray\n"
+    "}")
+            self.predsWidget.setObjectName("predsWidget")
+            self.verticalLayout_2 = QVBoxLayout(self.predsWidget)
+            self.verticalLayout_2.setObjectName("verticalLayout_2")
+            self.happyLabel = QLabel(self.predsWidget)
+            self.happyLabel.setMaximumSize(QSize(16777215, 16777215))
+            font = QFont()
+            font.setPointSize(16)
+            self.happyLabel.setFont(font)
+            self.happyLabel.setAlignment(Qt.AlignBottom|Qt.AlignHCenter)
+            self.happyLabel.setObjectName("happyLabel")
+            self.verticalLayout_2.addWidget(self.happyLabel)
+            self.happyBar = QProgressBar(self.predsWidget)
+            self.happyBar.setMinimumSize(QSize(150, 16))
+            self.happyBar.setMaximumSize(QSize(16777215, 16777215))
+            self.happyBar.setStyleSheet("QProgressBar{\n"
+    "    background-color: rgb(245, 245, 245);\n"
+    "    border: 2px solid black;\n"
+    "    border-radius: 5px;\n"
+    "    text-align: center\n"
+    "}\n"
+    "\n"
+    "QProgressBar::chunk {\n"
+    "     background-color: #FFA52C;\n"
+    " }")
+            self.happyBar.setProperty("value", 24)
+            self.happyBar.setAlignment(Qt.AlignCenter)
+            self.happyBar.setObjectName("happyBar")
+            self.verticalLayout_2.addWidget(self.happyBar)
+            self.surpriseLabel = QLabel(self.predsWidget)
+            self.surpriseLabel.setMaximumSize(QSize(16777215, 16777215))
+            font = QFont()
+            font.setPointSize(16)
+            self.surpriseLabel.setFont(font)
+            self.surpriseLabel.setAlignment(Qt.AlignBottom|Qt.AlignHCenter)
+            self.surpriseLabel.setObjectName("surpriseLabel")
+            self.verticalLayout_2.addWidget(self.surpriseLabel)
+            self.surpriseBar = QProgressBar(self.predsWidget)
+            self.surpriseBar.setMinimumSize(QSize(150, 16))
+            self.surpriseBar.setMaximumSize(QSize(16777215, 16777215))
+            self.surpriseBar.setStyleSheet("QProgressBar{\n"
+    "    background-color: rgb(245, 245, 245);\n"
+    "    border: 2px solid black;\n"
+    "    border-radius: 5px;\n"
+    "    text-align: center\n"
+    "}\n"
+    "\n"
+    "QProgressBar::chunk {\n"
+    "     background-color: #FFFF41;\n"
+    " }")
+            self.surpriseBar.setProperty("value", 24)
+            self.surpriseBar.setAlignment(Qt.AlignCenter)
+            self.surpriseBar.setObjectName("surpriseBar")
+            self.verticalLayout_2.addWidget(self.surpriseBar)
+            self.neutralLabel = QLabel(self.predsWidget)
+            self.neutralLabel.setMaximumSize(QSize(16777215, 16777215))
+            font = QFont()
+            font.setPointSize(16)
+            self.neutralLabel.setFont(font)
+            self.neutralLabel.setAlignment(Qt.AlignBottom|Qt.AlignHCenter)
+            self.neutralLabel.setObjectName("neutralLabel")
+            self.verticalLayout_2.addWidget(self.neutralLabel)
+            self.neutralBar = QProgressBar(self.predsWidget)
+            self.neutralBar.setMinimumSize(QSize(150, 16))
+            self.neutralBar.setMaximumSize(QSize(16777215, 16777215))
+            self.neutralBar.setStyleSheet("QProgressBar{\n"
+    "    background-color: rgb(245, 245, 245);\n"
+    "    border: 2px solid black;\n"
+    "    border-radius: 5px;\n"
+    "    text-align: center\n"
+    "}\n"
+    "\n"
+    "QProgressBar::chunk {\n"
+    "     background-color: #008018;\n"
+    " }")
+            self.neutralBar.setProperty("value", 24)
+            self.neutralBar.setAlignment(Qt.AlignCenter)
+            self.neutralBar.setObjectName("neutralBar")
+            self.verticalLayout_2.addWidget(self.neutralBar)
+            self.sadLabel = QLabel(self.predsWidget)
+            self.sadLabel.setMaximumSize(QSize(16777215, 16777215))
+            font = QFont()
+            font.setPointSize(16)
+            self.sadLabel.setFont(font)
+            self.sadLabel.setAlignment(Qt.AlignBottom|Qt.AlignHCenter)
+            self.sadLabel.setObjectName("sadLabel")
+            self.verticalLayout_2.addWidget(self.sadLabel)
+            self.sadBar = QProgressBar(self.predsWidget)
+            self.sadBar.setMinimumSize(QSize(150, 16))
+            self.sadBar.setMaximumSize(QSize(16777215, 16777215))
+            self.sadBar.setStyleSheet("QProgressBar{\n"
+    "    background-color: rgb(245, 245, 245);\n"
+    "    border: 2px solid black;\n"
+    "    border-radius: 5px;\n"
+    "    text-align: center\n"
+    "}\n"
+    "\n"
+    "QProgressBar::chunk {\n"
+    "     background-color: rgb(0, 93, 255);\n"
+    " }")
+            self.sadBar.setProperty("value", 24)
+            self.sadBar.setAlignment(Qt.AlignCenter)
+            self.sadBar.setObjectName("sadBar")
+            self.verticalLayout_2.addWidget(self.sadBar)
+            self.scaredLabel = QLabel(self.predsWidget)
+            self.scaredLabel.setMaximumSize(QSize(16777215, 16777215))
+            font = QFont()
+            font.setPointSize(16)
+            self.scaredLabel.setFont(font)
+            self.scaredLabel.setAlignment(Qt.AlignBottom|Qt.AlignHCenter)
+            self.scaredLabel.setObjectName("scaredLabel")
+            self.verticalLayout_2.addWidget(self.scaredLabel)
+            self.scaredBar = QProgressBar(self.predsWidget)
+            self.scaredBar.setMinimumSize(QSize(150, 16))
+            self.scaredBar.setMaximumSize(QSize(16777215, 16777215))
+            self.scaredBar.setStyleSheet("QProgressBar{\n"
+    "    background-color: rgb(245, 245, 245);\n"
+    "    border: 2px solid black;\n"
+    "    border-radius: 5px;\n"
+    "    text-align: center\n"
+    "}\n"
+    "\n"
+    "\n"
+    "QProgressBar::chunk {\n"
+    "     background-color: #86007D;\n"
+    " }")
+            self.scaredBar.setProperty("value", 24)
+            self.scaredBar.setAlignment(Qt.AlignCenter)
+            self.scaredBar.setObjectName("scaredBar")
+            self.verticalLayout_2.addWidget(self.scaredBar)
+            self.disgustLabel = QLabel(self.predsWidget)
+            self.disgustLabel.setMaximumSize(QSize(16777215, 16777215))
+            font = QFont()
+            font.setPointSize(16)
+            self.disgustLabel.setFont(font)
+            self.disgustLabel.setAlignment(Qt.AlignBottom|Qt.AlignHCenter)
+            self.disgustLabel.setObjectName("disgustLabel")
+            self.verticalLayout_2.addWidget(self.disgustLabel)
+            self.disgustBar = QProgressBar(self.predsWidget)
+            self.disgustBar.setMinimumSize(QSize(150, 16))
+            self.disgustBar.setMaximumSize(QSize(16777215, 16777215))
+            self.disgustBar.setStyleSheet("QProgressBar{\n"
+    "    background-color: rgb(245, 245, 245);\n"
+    "    border: 2px solid black;\n"
+    "    border-radius: 5px;\n"
+    "    text-align: center\n"
+    "}\n"
+    "\n"
+    "QProgressBar::chunk {\n"
+    "     background-color: #7F370A;\n"
+    " }")
+            self.disgustBar.setProperty("value", 24)
+            self.disgustBar.setAlignment(Qt.AlignCenter)
+            self.disgustBar.setObjectName("disgustBar")
+            self.verticalLayout_2.addWidget(self.disgustBar)
+            self.angryLabel = QLabel(self.predsWidget)
+            self.angryLabel.setMaximumSize(QSize(16777215, 16777215))
+            font = QFont()
+            font.setPointSize(16)
+            self.angryLabel.setFont(font)
+            self.angryLabel.setAlignment(Qt.AlignBottom|Qt.AlignHCenter)
+            self.angryLabel.setObjectName("angryLabel")
+            self.verticalLayout_2.addWidget(self.angryLabel)
+            self.angryBar = QProgressBar(self.predsWidget)
+            self.angryBar.setMinimumSize(QSize(150, 16))
+            self.angryBar.setMaximumSize(QSize(16777215, 16777215))
+            self.angryBar.setStyleSheet("QProgressBar{\n"
+    "    background-color: rgb(245, 245, 245);\n"
+    "    border: 2px solid black;\n"
+    "    border-radius: 5px;\n"
+    "    text-align: center\n"
+    "}\n"
+    " \n"
+    "QProgressBar::chunk {\n"
+    "     background-color: #FF0018;\n"
+    " }")
+            self.angryBar.setProperty("value", 24)
+            self.angryBar.setAlignment(Qt.AlignCenter)
+            self.angryBar.setObjectName("angryBar")
+            self.verticalLayout_2.addWidget(self.angryBar)
+            self.gridLayout.addWidget(self.predsWidget, 4, 3, 1, 1)
+            
+            self.resetBtn.clicked.connect(self.resetFace)
+            self.retranslateUi(Form)
+            QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
-        _translate = QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
-        self.backBtn.setText(_translate("Form", "🔙"))
-        self.camLabel.setText(_translate("Form", "<html><head/><body><p align=\"center\"><span style=\" font-size:24pt;\">Камера(загрузка...)</span></p></body></html>"))
-        self.label.setText(_translate("Form", "<html><head/><body><p align=\"center\"><span style=\" font-size:24pt;\">Эмоции:</span></p></body></html>"))
-        self.happyLabel.setText(_translate("Form", "Счастье"))
-        self.surpriseLabel.setText(_translate("Form", "Удивление"))
-        self.neutralLabel.setText(_translate("Form", "Спокойствие"))
-        self.sadLabel.setText(_translate("Form", "Грусть"))
-        self.scaredLabel.setText(_translate("Form", "Испуг"))
-        self.disgustLabel.setText(_translate("Form", "Отвращение"))
-        self.angryLabel.setText(_translate("Form", "Злость"))
-        self.resetBtn.setText(_translate("Form", "Сменить лицо"))
+            _translate = QCoreApplication.translate
+            Form.setWindowTitle(_translate("Form", "Form"))
+            self.backBtn.setText(_translate("Form", "🔙"))
+            self.camLabel.setText(_translate("Form", "<html><head/><body><p align=\"center\"><span style=\" font-size:24pt;\">Камера(загрузка...)</span></p></body></html>"))
+            self.label_2.setText(_translate("Form", "<html><head/><body><p align=\"center\"><span style=\" font-size:24pt;\">Эмоции:</span></p></body></html>"))
+            self.resetBtn.setText(_translate("Form", "Выбрать другое лицо"))
+            self.happyLabel.setText(_translate("Form", "Счастье"))
+            self.surpriseLabel.setText(_translate("Form", "Удивление"))
+            self.neutralLabel.setText(_translate("Form", "Спокойствие"))
+            self.sadLabel.setText(_translate("Form", "Грусть"))
+            self.scaredLabel.setText(_translate("Form", "Испуг"))
+            self.disgustLabel.setText(_translate("Form", "Отвращение"))
+            self.angryLabel.setText(_translate("Form", "Злость"))
 
 
 
