@@ -79,9 +79,12 @@ class TestWidget(QWidget):
                     self.tracker = cv2.TrackerMOSSE_create()
                     self.tracker.init(self.gray, face_bb)
                     self.tracker_initiated = True
+                    self.resetBtn.setEnabled(True)
+
 
     def resetFace(self):
         self.tracker_initiated = False
+        self.resetBtn.setEnabled(False)
 
 
     def grab(self, cam, queue, width, height):
@@ -210,7 +213,7 @@ class TestWidget(QWidget):
         sizePolicy.setHeightForWidth(Form.sizePolicy().hasHeightForWidth())
         Form.setSizePolicy(sizePolicy)
         Form.setMinimumSize(QSize(854, 577))
-        Form.setMaximumSize(QSize(854, 577))
+        Form.setMaximumSize(QSize(854, 610))
         Form.setLayoutDirection(Qt.LeftToRight)
         Form.setAutoFillBackground(False)
         self.gridLayout = QGridLayout(Form)
@@ -228,8 +231,8 @@ class TestWidget(QWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.backBtn.sizePolicy().hasHeightForWidth())
         self.backBtn.setSizePolicy(sizePolicy)
-        self.backBtn.setMinimumSize(QSize(48, 48))
-        self.backBtn.setMaximumSize(QSize(48, 48))
+        self.backBtn.setMinimumSize(QSize(64, 64))
+        self.backBtn.setMaximumSize(QSize(64, 64))
         font = QFont()
         font.setPointSize(32)
         self.backBtn.setFont(font)
@@ -259,7 +262,7 @@ class TestWidget(QWidget):
         self.camForm.setObjectName("camForm")
         self.gridLayout.addWidget(self.camForm, 4, 3, 1, 1)
         self.verticalLayout = QVBoxLayout()
-        self.verticalLayout.setContentsMargins(10, 0, 10, 0)
+        self.verticalLayout.setContentsMargins(10, 0, 10, 30)
         self.verticalLayout.setSpacing(5)
         self.verticalLayout.setObjectName("verticalLayout")
         self.happyLabel = QLabel(Form)
@@ -431,7 +434,22 @@ class TestWidget(QWidget):
         self.angryBar.setProperty("value", 24)
         self.angryBar.setObjectName("angryBar")
         self.verticalLayout.addWidget(self.angryBar)
-        self.gridLayout.addLayout(self.verticalLayout, 4, 4, 1, 1)
+        self.resetBtn = QPushButton(Form)
+        self.resetBtn.setEnabled(False)
+        sizePolicy = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.resetBtn.sizePolicy().hasHeightForWidth())
+        self.resetBtn.setSizePolicy(sizePolicy)
+        self.resetBtn.setMinimumSize(QSize(150, 50))
+        self.resetBtn.setMaximumSize(QSize(150, 50))
+        font = QFont()
+        font.setPointSize(16)
+        self.resetBtn.setFont(font)
+        self.resetBtn.setObjectName("resetBtn")
+        self.verticalLayout.addWidget(self.resetBtn)
+        self.gridLayout.addLayout(self.verticalLayout, 4, 4, 3, 1)
+        self.resetBtn.clicked.connect(self.resetFace)
 
         self.retranslateUi(Form)
         QMetaObject.connectSlotsByName(Form)
@@ -449,6 +467,7 @@ class TestWidget(QWidget):
         self.scaredLabel.setText(_translate("Form", "Испуг"))
         self.disgustLabel.setText(_translate("Form", "Отвращение"))
         self.angryLabel.setText(_translate("Form", "Злость"))
+        self.resetBtn.setText(_translate("Form", "Сменить лицо"))
 
 
 
