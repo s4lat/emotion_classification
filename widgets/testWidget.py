@@ -455,7 +455,6 @@ class TestWidget(QWidget):
     def retranslateUi(self, Form):
             _translate = QCoreApplication.translate
             Form.setWindowTitle(_translate("Form", "Form"))
-            self.backBtn.setText(_translate("Form", "🔙"))
             self.camLabel.setText(_translate("Form", "<html><head/><body><p align=\"center\"><span style=\" font-size:24pt;\">Камера(загрузка...)</span></p></body></html>"))
             self.label_2.setText(_translate("Form", "<html><head/><body><p align=\"center\"><span style=\" font-size:24pt;\">Эмоции:</span></p></body></html>"))
             self.resetBtn.setText(_translate("Form", "Выбрать другое лицо"))
@@ -466,6 +465,13 @@ class TestWidget(QWidget):
             self.scaredLabel.setText(_translate("Form", "Испуг"))
             self.disgustLabel.setText(_translate("Form", "Отвращение"))
             self.angryLabel.setText(_translate("Form", "Злость"))
+
+            if QIcon.hasThemeIcon('go-home'):
+                self.backBtn.setIcon(QIcon.fromTheme('go-home'))
+            else:
+                self.backBtn.setText(_translate("Form", "🔙"))
+
+
 
 
 
