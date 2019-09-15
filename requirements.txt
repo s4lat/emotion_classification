@@ -1,3 +1,4 @@
+Pillow
 imutils
 numpy
 Keras

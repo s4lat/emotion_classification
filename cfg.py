@@ -7,7 +7,7 @@ OUT_WIDTH, OUT_HEIGHT = 640, 360
 IN_WIDTH, IN_HEIGHT = OUT_WIDTH // SCALE_FACTOR, OUT_HEIGHT // SCALE_FACTOR
 IN_WIDTH, IN_HEIGHT = int(IN_WIDTH), int(IN_HEIGHT)
 
-NOT_SELECTED_COLOR = (0, 200, 0)[::-1] #RGB to BGR
+NOT_SELECTED_COLOR = (0, 255, 0)[::-1] #RGB to BGR
 SELECTED_COLOR = (255, 140, 0)[::-1]
 
 MODELS = { 'tiny_x' : 'tiny_exception_0.60_48.hdf5',
@@ -19,6 +19,8 @@ MODELS = { 'tiny_x' : 'tiny_exception_0.60_48.hdf5',
 CURR_MODEL = 'mini_x'
 EMOTIONS = ["angry" ,"disgust","scared", "happy", "sad", "surprised",
  "neutral"]
+EMOTIONS_RUS = ["Злость" ,"Отвращение","Испуг", "Счастье", "Грусть", "Удивление",
+ "Спокойствие"]
 
 USE_HOG = False
 

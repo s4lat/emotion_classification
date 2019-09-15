@@ -6,8 +6,9 @@
 #
 # WARNING! All changes made in this file will be lost!
 from keras.preprocessing.image import img_to_array
-from imutils.video import VideoStream, FPS
 from imutils.face_utils.helpers import rect_to_bb
+from PIL import ImageFont, ImageDraw, Image
+from imutils.video import VideoStream, FPS
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -92,6 +93,9 @@ class TestWidget(QWidget):
 
             self.tracker_initiated = False
 
+            fontpath = "./helvetica.ttf"
+            font = ImageFont.truetype(fontpath, 24)
+
             fps = FPS().start()
             frame_ind = 0
             CURRENT_FPS = 0
@@ -130,11 +134,24 @@ class TestWidget(QWidget):
                         x, y, w, h = (x*self.cfg.SCALE_FACTOR, y*self.cfg.SCALE_FACTOR, w*self.cfg.SCALE_FACTOR, h*self.cfg.SCALE_FACTOR)
                         x, y, w, h = (int(x), int(y), int(w), int(h))
 
-                        draw_border(out_frame, (x, y), (x+w, y+h), self.cfg.SELECTED_COLOR, 2, 5, 10)
+                        # cv2.rectangle(out_frame, (x, y), (x+w, y+h), self.cfg.SELECTED_COLOR, 1, cv2.LINE_AA)
+                        draw_border(out_frame, (x, y), (x+w, y+h), self.cfg.SELECTED_COLOR, 1, 5, 15)
+                        # draw_text_w_background(out_frame, 'Эмоция',
+                        #         (x+int(w*0.13), y+int(h*1.15)),
+                        #         self.cfg.font, self.cfg.fontScale,
+                        #         self.cfg.fontColor, self.cfg.bgColor, 1)
+
+                        out_frame = Image.fromarray(out_frame)
+                        draw = ImageDraw.Draw(out_frame)
+
+                        tW, tH = font.getsize(self.cfg.EMOTIONS_RUS[emotion])
+                        draw.rectangle(((x-2, y+h+5), (x+tW+2, y+h+tH+2)), fill = self.cfg.SELECTED_COLOR)
+                        draw.text((x, y+h),  self.cfg.EMOTIONS_RUS[emotion], font = font, fill = (255, 255, 255, 255))
+
+                        out_frame = np.array(out_frame)
+
                     else:
                         self.resetFace()
-                        emotions = [0] * 7
-
 
                 else:
                     if self.cfg.USE_HOG:
@@ -147,8 +164,8 @@ class TestWidget(QWidget):
                         x, y, w, h = (x*self.cfg.SCALE_FACTOR, y*self.cfg.SCALE_FACTOR, w*self.cfg.SCALE_FACTOR, h*self.cfg.SCALE_FACTOR)
                         x, y, w, h = (int(x), int(y), int(w), int(h))
 
-                        draw_border(out_frame, (x, y), (x+w, y+h), self.cfg.NOT_SELECTED_COLOR, 2, 5, 10)
-
+                        # cv2.rectangle(out_frame, (x, y), (x+w, y+h), self.cfg.NOT_SELECTED_COLOR, 1, cv2.LINE_AA)
+                        draw_border(out_frame, (x, y), (x+w, y+h), self.cfg.NOT_SELECTED_COLOR, 1, 5, 15)
                     # cv2.setMouseCallback('cam', choose_face, faces)
 
                 #Draw fps
@@ -168,7 +185,7 @@ class TestWidget(QWidget):
                         fps = FPS().start()
                         frame_ind = 0
 
-                    result = {'img' : out_frame, 'emotions': emotions}
+                    result = {'img' : out_frame, 'emotions': emotions if self.tracker_initiated else [0]*7}
 
                     queue.put(result)
         except Exception as e:
