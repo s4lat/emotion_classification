@@ -81,11 +81,9 @@ class TestWidget(QWidget):
                     self.tracker_initiated = True
                     self.resetBtn.setEnabled(True)
 
-
     def resetFace(self):
         self.tracker_initiated = False
         self.resetBtn.setEnabled(False)
-
 
     def grab(self, cam, queue, width, height):
         try:
@@ -134,7 +132,9 @@ class TestWidget(QWidget):
 
                         draw_border(out_frame, (x, y), (x+w, y+h), self.cfg.SELECTED_COLOR, 2, 5, 10)
                     else:
-                        self.tracker_initiated = False
+                        self.resetFace()
+                        emotions = [0] * 7
+
 
                 else:
                     if self.cfg.USE_HOG:
@@ -447,7 +447,7 @@ class TestWidget(QWidget):
             self.angryBar.setObjectName("angryBar")
             self.verticalLayout_2.addWidget(self.angryBar)
             self.gridLayout.addWidget(self.predsWidget, 4, 3, 1, 1)
-            
+
             self.resetBtn.clicked.connect(self.resetFace)
             self.retranslateUi(Form)
             QMetaObject.connectSlotsByName(Form)
