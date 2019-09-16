@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>916</width>
-    <height>503</height>
+    <width>1466</width>
+    <height>947</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,8 +18,8 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>916</width>
-    <height>503</height>
+    <width>16777215</width>
+    <height>16777215</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -90,6 +90,12 @@
    </item>
    <item row="1" column="3">
     <widget class="QLabel" name="label_2">
+     <property name="maximumSize">
+      <size>
+       <width>250</width>
+       <height>16777215</height>
+      </size>
+     </property>
      <property name="styleSheet">
       <string notr="true">border: 2px solid gray;</string>
      </property>
@@ -121,7 +127,7 @@
      <property name="maximumSize">
       <size>
        <width>16777215</width>
-       <height>16777215</height>
+       <height>80</height>
       </size>
      </property>
      <property name="font">
@@ -144,8 +150,8 @@
      </property>
      <property name="maximumSize">
       <size>
-       <width>640</width>
-       <height>360</height>
+       <width>16777215</width>
+       <height>16777215</height>
       </size>
      </property>
      <property name="styleSheet">
@@ -155,18 +161,30 @@
    </item>
    <item row="4" column="3">
     <widget class="QWidget" name="predsWidget" native="true">
+     <property name="maximumSize">
+      <size>
+       <width>250</width>
+       <height>16777215</height>
+      </size>
+     </property>
      <property name="styleSheet">
       <string notr="true">#predsWidget {
 	border: 2px solid gray
 }</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>12</number>
+      </property>
       <item>
        <widget class="QLabel" name="happyLabel">
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>16777215</height>
+          <height>32</height>
          </size>
         </property>
         <property name="font">
@@ -175,7 +193,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Счастье</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;Счастье&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -193,7 +211,7 @@
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>16777215</height>
+          <height>35</height>
          </size>
         </property>
         <property name="styleSheet">
@@ -221,7 +239,7 @@ QProgressBar::chunk {
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>16777215</height>
+          <height>32</height>
          </size>
         </property>
         <property name="font">
@@ -230,7 +248,7 @@ QProgressBar::chunk {
          </font>
         </property>
         <property name="text">
-         <string>Удивление</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;Удивление&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -248,7 +266,7 @@ QProgressBar::chunk {
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>16777215</height>
+          <height>35</height>
          </size>
         </property>
         <property name="styleSheet">
@@ -276,7 +294,7 @@ QProgressBar::chunk {
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>16777215</height>
+          <height>32</height>
          </size>
         </property>
         <property name="font">
@@ -285,7 +303,7 @@ QProgressBar::chunk {
          </font>
         </property>
         <property name="text">
-         <string>Спокойствие</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;Спокойствие&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -303,7 +321,7 @@ QProgressBar::chunk {
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>16777215</height>
+          <height>35</height>
          </size>
         </property>
         <property name="styleSheet">
@@ -331,7 +349,7 @@ QProgressBar::chunk {
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>16777215</height>
+          <height>32</height>
          </size>
         </property>
         <property name="font">
@@ -340,7 +358,7 @@ QProgressBar::chunk {
          </font>
         </property>
         <property name="text">
-         <string>Грусть</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;Грусть&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -358,7 +376,7 @@ QProgressBar::chunk {
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>16777215</height>
+          <height>35</height>
          </size>
         </property>
         <property name="styleSheet">
@@ -386,7 +404,7 @@ QProgressBar::chunk {
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>16777215</height>
+          <height>32</height>
          </size>
         </property>
         <property name="font">
@@ -395,7 +413,7 @@ QProgressBar::chunk {
          </font>
         </property>
         <property name="text">
-         <string>Испуг</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;Испуг&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -413,7 +431,7 @@ QProgressBar::chunk {
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>16777215</height>
+          <height>35</height>
          </size>
         </property>
         <property name="styleSheet">
@@ -442,7 +460,7 @@ QProgressBar::chunk {
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>16777215</height>
+          <height>32</height>
          </size>
         </property>
         <property name="font">
@@ -451,7 +469,7 @@ QProgressBar::chunk {
          </font>
         </property>
         <property name="text">
-         <string>Отвращение</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;Отвращение&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -469,7 +487,7 @@ QProgressBar::chunk {
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>16777215</height>
+          <height>35</height>
          </size>
         </property>
         <property name="styleSheet">
@@ -497,7 +515,7 @@ QProgressBar::chunk {
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>16777215</height>
+          <height>32</height>
          </size>
         </property>
         <property name="font">
@@ -506,7 +524,7 @@ QProgressBar::chunk {
          </font>
         </property>
         <property name="text">
-         <string>Злость</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;Злость&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -524,7 +542,7 @@ QProgressBar::chunk {
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>16777215</height>
+          <height>35</height>
          </size>
         </property>
         <property name="styleSheet">

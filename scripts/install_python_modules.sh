@@ -1,1 +1,1 @@
-python3 -m pip install keras imutils tensorflow numpy
+python3 -m pip install keras imutils tensorflow numpy Pillow
