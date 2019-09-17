@@ -32,9 +32,8 @@ class FrameWidget(QWidget):
         qp = QPainter()
         qp.begin(self)
         if self.cam_frame:
-            width = self.frameGeometry().width()
-            height = self.frameGeometry().height()
-            qp.drawImage(QPoint(0, 0), QImage(self.cam_frame).scaled(width, height))
+            qp.drawImage(QPoint(0, 0), self.cam_frame)
+            
         qp.end()
 
 
@@ -57,14 +56,14 @@ class TestWidget(QWidget):
 
         self.emotion_classifier = emotion_classifier
 
-        self.faces = None
+        self.faces = []
         self.tracker_initiated = False
         self.gray = None
 
         self.running = True
         self.q = queue.Queue()
 
-        self.capture_thread = threading.Thread(target=self.grab, args = (0, self.q, self.cfg.OUT_WIDTH, self.cfg.OUT_HEIGHT))
+        self.capture_thread = threading.Thread(target=self.grab, args = (0, self.q))
         self.capture_thread.start()
 
         self.timer = QTimer(self)
@@ -77,20 +76,17 @@ class TestWidget(QWidget):
     def chooseFace(self, coords):
         mX, mY = coords
 
-        width = self.camForm.frameGeometry().width()
-        height = self.camForm.frameGeometry().height()
+        OUT_WIDTH = self.camForm.frameGeometry().width()
+        OUT_HEIGHT = self.camForm.frameGeometry().height()
 
-        scale_h = 640 / width
-        scale_w = 360 / height
+        scale_x = self.cfg.IN_WIDTH / OUT_WIDTH
+        scale_y = self.cfg.IN_HEIGHT / OUT_HEIGHT
 
-        mX *= scale_h
-        mY *= scale_w
+        mX *= scale_x
+        mY *= scale_y
 
         if not self.tracker_initiated:
-            mX, mY = (mX//self.cfg.SCALE_FACTOR, mY//self.cfg.SCALE_FACTOR)
-            print(mX, mY)
             for x, y, w, h in self.faces:
-                print(x, y, x+w, y+h)
                 if (x <= mX <= x+w) and (y <= mY <= y+h):
                     face_bb = (x, y, w, h)
                     self.tracker = cv2.TrackerMOSSE_create()
@@ -102,7 +98,7 @@ class TestWidget(QWidget):
         self.tracker_initiated = False
         self.resetBtn.setEnabled(False)
 
-    def grab(self, cam, queue, width, height):
+    def grab(self, cam, queue):
         try:
             cap = VideoStream(src=0).start()
             input_shape = self.emotion_classifier.layers[0].input_shape[1:3]
@@ -120,8 +116,14 @@ class TestWidget(QWidget):
             self.camLabel.setText("<html><head/><body><p align=\"center\"><span style=\" font-size:24pt;\">Камера</span></p></body></html>")
 
             while (self.running):
+                OUT_WIDTH = self.camForm.frameGeometry().width()
+                OUT_HEIGHT = self.camForm.frameGeometry().height()
+
+                scale_x = self.cfg.IN_WIDTH / OUT_WIDTH
+                scale_y = self.cfg.IN_HEIGHT / OUT_HEIGHT
+
                 out_frame = cap.read()
-                out_frame = cv2.resize(out_frame, (self.cfg.OUT_WIDTH, self.cfg.OUT_HEIGHT))
+                out_frame = cv2.resize(out_frame, (OUT_WIDTH, OUT_HEIGHT))
                 out_frame = cv2.flip(out_frame, 1)
 
                 frame = cv2.resize(out_frame, (self.cfg.IN_WIDTH, self.cfg.IN_HEIGHT))
@@ -147,7 +149,7 @@ class TestWidget(QWidget):
                         emotions = [int(emotion*100) for emotion in preds]
                         emotion = np.argmax(preds)
 
-                        x, y, w, h = (x*self.cfg.SCALE_FACTOR, y*self.cfg.SCALE_FACTOR, w*self.cfg.SCALE_FACTOR, h*self.cfg.SCALE_FACTOR)
+                        x, y, w, h = (x//scale_x, y//scale_y, w//scale_x, h//scale_y)
                         x, y, w, h = (int(x), int(y), int(w), int(h))
 
                         # cv2.rectangle(out_frame, (x, y), (x+w, y+h), self.cfg.SELECTED_COLOR, 1, cv2.LINE_AA)
@@ -177,7 +179,7 @@ class TestWidget(QWidget):
                         self.faces = self.face_detector.detectMultiScale(gray)
 
                     for x, y, w, h in self.faces:
-                        x, y, w, h = (x*self.cfg.SCALE_FACTOR, y*self.cfg.SCALE_FACTOR, w*self.cfg.SCALE_FACTOR, h*self.cfg.SCALE_FACTOR)
+                        x, y, w, h = (x//scale_x, y//scale_y, w//scale_x, h//scale_y)
                         x, y, w, h = (int(x), int(y), int(w), int(h))
 
                         # cv2.rectangle(out_frame, (x, y), (x+w, y+h), self.cfg.NOT_SELECTED_COLOR, 1, cv2.LINE_AA)
