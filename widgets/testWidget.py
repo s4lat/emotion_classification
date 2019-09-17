@@ -33,7 +33,7 @@ class FrameWidget(QWidget):
         qp.begin(self)
         if self.cam_frame:
             qp.drawImage(QPoint(0, 0), self.cam_frame)
-            
+
         qp.end()
 
 
@@ -122,12 +122,14 @@ class TestWidget(QWidget):
                 scale_x = self.cfg.IN_WIDTH / OUT_WIDTH
                 scale_y = self.cfg.IN_HEIGHT / OUT_HEIGHT
 
-                out_frame = cap.read()
-                out_frame = cv2.resize(out_frame, (OUT_WIDTH, OUT_HEIGHT))
-                out_frame = cv2.flip(out_frame, 1)
+                frame = cap.read()
+                frame = cv2.flip(frame, 1)
 
-                frame = cv2.resize(out_frame, (self.cfg.IN_WIDTH, self.cfg.IN_HEIGHT))
-                gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                gray = cv2.resize(frame, (self.cfg.IN_WIDTH, self.cfg.IN_HEIGHT))
+                gray = cv2.cvtColor(gray, cv2.COLOR_BGR2GRAY)
+
+                out_frame = cv2.resize(frame, (OUT_WIDTH, OUT_HEIGHT))
+
                 self.gray = gray
 
                 if self.tracker_initiated:
@@ -152,12 +154,7 @@ class TestWidget(QWidget):
                         x, y, w, h = (x//scale_x, y//scale_y, w//scale_x, h//scale_y)
                         x, y, w, h = (int(x), int(y), int(w), int(h))
 
-                        # cv2.rectangle(out_frame, (x, y), (x+w, y+h), self.cfg.SELECTED_COLOR, 1, cv2.LINE_AA)
-                        draw_border(out_frame, (x, y), (x+w, y+h), self.cfg.SELECTED_COLOR, 1, 5, 15)
-                        # draw_text_w_background(out_frame, 'Эмоция',
-                        #         (x+int(w*0.13), y+int(h*1.15)),
-                        #         self.cfg.font, self.cfg.fontScale,
-                        #         self.cfg.fontColor, self.cfg.bgColor, 1)
+                        draw_border(out_frame, (x, y), (x+w, y+h), self.cfg.SELECTED_COLOR, 2, 5, 15)
 
                         out_frame = Image.fromarray(out_frame)
                         draw = ImageDraw.Draw(out_frame)
@@ -182,9 +179,7 @@ class TestWidget(QWidget):
                         x, y, w, h = (x//scale_x, y//scale_y, w//scale_x, h//scale_y)
                         x, y, w, h = (int(x), int(y), int(w), int(h))
 
-                        # cv2.rectangle(out_frame, (x, y), (x+w, y+h), self.cfg.NOT_SELECTED_COLOR, 1, cv2.LINE_AA)
-                        draw_border(out_frame, (x, y), (x+w, y+h), self.cfg.NOT_SELECTED_COLOR, 1, 5, 15)
-                    # cv2.setMouseCallback('cam', choose_face, faces)
+                        draw_border(out_frame, (x, y), (x+w, y+h), self.cfg.NOT_SELECTED_COLOR, 2, 5, 15)
 
                 #Draw fps
                 draw_text_w_background(out_frame, 'FPS: %.2f' % CURRENT_FPS,

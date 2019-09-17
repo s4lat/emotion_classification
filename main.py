@@ -25,6 +25,7 @@ class MainWindow(QMainWindow):
 		self.central_widget.addWidget(self.menu_widget)
 
 		self.menu_widget.testBtn.clicked.connect(self.testWidget)
+		self.menu_widget.settingsBtn.clicked.connect(self.settingsWidget)
 		self.menu_widget.exitBtn.clicked.connect(self.close)
 
 	def testWidget(self):
@@ -34,6 +35,9 @@ class MainWindow(QMainWindow):
 		self.central_widget.addWidget(test_widget)
 		self.central_widget.setCurrentWidget(test_widget)
 		test_widget.backBtn.clicked.connect(partial(self.backToMenu, widget=test_widget))
+
+	def settingsWidget(self):
+		pass
 
 	def backToMenu(self, widget):
 		self.central_widget.setCurrentWidget(self.menu_widget)

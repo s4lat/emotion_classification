@@ -1,3 +1,4 @@
+dlib
 Pillow
 imutils
 numpy
