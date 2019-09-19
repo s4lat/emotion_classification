@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>403</width>
-    <height>476</height>
+    <height>524</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -118,7 +118,7 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="QPushButton" name="testBtn">
+      <widget class="QPushButton" name="quizBtn">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -146,12 +146,12 @@
         </font>
        </property>
        <property name="text">
-        <string>Тестирование</string>
+        <string>Определить эмоцию</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="trainBtn">
+      <widget class="QPushButton" name="exprBtn">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -179,7 +179,40 @@
         </font>
        </property>
        <property name="text">
-        <string>Упражнения</string>
+        <string>Выразить эмоцию</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="freeBtn">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>250</width>
+         <height>50</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>250</width>
+         <height>50</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>16</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Свободный режим</string>
        </property>
       </widget>
      </item>
