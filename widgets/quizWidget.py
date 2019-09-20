@@ -59,17 +59,15 @@ class QuizWidget(QWidget):
     def updateLabels(self, emotion=None):
         if emotion:
             if self.correct:
-                self.qLabel.setText('<html><head/><body><p align="center"><span style=" font-size:18pt;">Верно! </span><span style=" font-size:18pt; color:#00dc00;">%s</span><span style=" font-size:18pt;"> - правильный ответ</span></p></body></html>'
-                     % self.cfg.EMOTIONS_RUS[emotion])
+                self.qLabel.setText(self.cfg.TOP_GOOD_LABEL % self.cfg.EMOTIONS_RUS[emotion])
             else:
-                self.qLabel.setText('<html><head/><body><p align="center"><span style=" font-size:18pt;">Ответ </span><span style=" font-size:18pt; color:#ff0000;">%s</span><span style=" font-size:18pt;"> - неверен, правильный ответ - </span><span style=" font-size:18pt; color:#00dc00;">%s</span></p></body></html>'
-                    % (self.cfg.EMOTIONS_RUS[emotion].lower(), 
-                        self.cfg.EMOTIONS_RUS[self.labels[self.ind]].lower()))
+                self.qLabel.setText(self.cfg.TOP_BAD_LABEL % 
+                    (self.cfg.EMOTIONS_RUS[emotion].lower(), 
+                    self.cfg.EMOTIONS_RUS[self.labels[self.ind]].lower()))
         else:
-            self.qLabel.setText("<html><head/><body><p align=\"center\"><span style=\" font-size:18pt;\">Какую эмоцию выражает лицо человека на изображении?</span></p></body></html>")
+            self.qLabel.setText(self.cfg.TOP_NEUTRAL_LABEL)
 
-        self.scoreLabel.setText("<html><head/><body><p align=\"center\"><span style=\" font-size:28pt; color:#00dc00; vertical-align:sub;\">✓:%s</span></p><p align=\"center\"><span style=\" font-size:28pt; color:#ff0000; vertical-align:sub;\">✗:%s</span></p><p align=\"center\"><span style=\" font-size:28pt; color:#000000; vertical-align:sub;\">O:%s</span></p></body></html>"
-            % (self.good, self.bad, self.good+self.bad))
+        self.scoreLabel.setText(self.cfg.QUIZ_SCORE_LABEL % (self.good, self.bad, self.good+self.bad))
 
         # self.qLabel.adjustSize() if label not refreshing
 
