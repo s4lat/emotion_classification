@@ -78,7 +78,6 @@ class QuizWidget(QWidget):
     def load_images(self):
         images = os.listdir(self.cfg.QUIZ_IMAGES_PATH)
         images = [i for i in images if not i.startswith('.')]
-
         np.random.shuffle(images)
 
         labels = []
@@ -101,6 +100,7 @@ class QuizWidget(QWidget):
         return labels, images
 
     def last_setup_ui(self):
+        self.imgLabel.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
         self.imgLabel.setScaledContents(True)
         self.emotionBtns.buttonClicked.connect(self.checkAnswer)
         self.imgLabel.mousePressEvent = self.nextImage
