@@ -34,8 +34,6 @@ EMOTIONS = ["angry" ,"disgust","scared", "happy", "sad", "surprised",
 EMOTIONS_RUS = ["Злость" ,"Отвращение","Испуг", "Счастье", "Грусть", "Удивление",
  "Спокойствие"]
 
-USE_HOG = False
-
 font                   = cv2.FONT_HERSHEY_SIMPLEX
 fontScale              = 0.5
 fontColor              = (255, 255, 255)[::-1]

@@ -39,3 +39,6 @@ sed -i 's/CONF_SWAPSIZE=1024/CONF_SWAPSIZE=100/g' /etc/dphys-swapfile
 
 make install
 ldconfig
+
+cd ../..
+rm -rf opencv-4.1.1

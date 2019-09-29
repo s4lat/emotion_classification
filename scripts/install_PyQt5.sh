@@ -25,3 +25,6 @@ make install
 
 sed -i 's/CONF_SWAPSIZE=1024/CONF_SWAPSIZE=100/g' /etc/dphys-swapfile
 /etc/init.d/dphys-swapfile restart
+
+cd ..
+rm -rf PyQt5_gpl-5.13.1

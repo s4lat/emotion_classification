@@ -48,11 +48,7 @@ class DetectWidget(QWidget):
 
         self.cfg = cfg
 
-        if self.cfg.USE_HOG:
-            from dlib import get_frontal_face_detector
-            self.face_detector = get_frontal_face_detector()
-        else:
-            self.face_detector = face_detector
+        self.face_detector = face_detector
 
         self.emotion_classifier = emotion_classifier
 
@@ -169,11 +165,7 @@ class DetectWidget(QWidget):
                         self.resetFace()
 
                 else:
-                    if self.cfg.USE_HOG:
-                        faces = self.face_detector(gray)
-                        self.faces = [rect_to_bb(rect) for rect in faces]
-                    else:
-                        self.faces = self.face_detector.detectMultiScale(gray)
+                    self.faces = self.face_detector.detectMultiScale(gray)
 
                     for x, y, w, h in self.faces:
                         x, y, w, h = (x//scale_x, y//scale_y, w//scale_x, h//scale_y)
