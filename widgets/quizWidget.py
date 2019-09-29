@@ -64,15 +64,36 @@ class QuizWidget(QWidget):
                 self.qLabel.setText(self.cfg.TOP_BAD_LABEL % 
                     (self.cfg.EMOTIONS_RUS[emotion].lower(), 
                     self.cfg.EMOTIONS_RUS[self.labels[self.ind]].lower()))
+
+            self.disgustBtn.setEnabled(False)
+            self.scaredBtn.setEnabled(False)
+            self.angryBtn.setEnabled(False)
+            self.sadBtn.setEnabled(False)
+            self.surprisedBtn.setEnabled(False)
+            self.happyBtn.setEnabled(False)
+            self.neutralBtn.setEnabled(False)
+
         else:
             self.qLabel.setText(self.cfg.TOP_NEUTRAL_LABEL)
+
+            self.disgustBtn.setEnabled(True)
+            self.scaredBtn.setEnabled(True)
+            self.angryBtn.setEnabled(True)
+            self.sadBtn.setEnabled(True)
+            self.surprisedBtn.setEnabled(True)
+            self.happyBtn.setEnabled(True)
+            self.neutralBtn.setEnabled(True)
+
 
         self.scoreLabel.setText(self.cfg.QUIZ_SCORE_LABEL % (self.good, self.bad, self.good+self.bad))
 
         # self.qLabel.adjustSize() if label not refreshing
 
     def drawImage(self):
-        self.imgLabel.setPixmap(QPixmap(self.cfg.QUIZ_IMAGES_PATH + self.images[self.ind]))
+        self.imgLabel.setPixmap(
+            QPixmap(self.cfg.QUIZ_IMAGES_PATH + self.images[self.ind]).scaled(
+                self.imgLabel.frameGeometry().width(), self.imgLabel.frameGeometry().height(),
+                Qt.KeepAspectRatio))
         self.imgLabel.update()
 
     def load_images(self):
@@ -102,12 +123,13 @@ class QuizWidget(QWidget):
     def last_setup_ui(self):
         self.imgLabel.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
         self.imgLabel.setScaledContents(True)
-        self.emotionBtns.buttonClicked.connect(self.checkAnswer)
         self.imgLabel.mousePressEvent = self.nextImage
+        
+        self.emotionBtns.buttonClicked.connect(self.checkAnswer)
 
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(925, 530)
+        Form.resize(892, 708)
         Form.setMaximumSize(QSize(16777215, 16777215))
         self.gridLayout = QGridLayout(Form)
         self.gridLayout.setObjectName("gridLayout")
@@ -166,6 +188,7 @@ class QuizWidget(QWidget):
         self.emotionBtns.addButton(self.neutralBtn)
         self.gridLayout.addWidget(self.neutralBtn, 6, 2, 1, 1)
         self.imgLabel = QLabel(Form)
+        self.imgLabel.setMinimumSize(QSize(640, 360))
         self.imgLabel.setStyleSheet("border: 2px solid gray;\n"
 "background: rgb(240, 240, 240)")
         self.imgLabel.setText("")

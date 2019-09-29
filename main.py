@@ -1,6 +1,6 @@
 from imutils.video import VideoStream, FPS
 from widgets.menuWidget import MenuWidget
-from widgets.freeWidget import FreeWidget
+from widgets.detectWidget import DetectWidget
 from widgets.quizWidget import QuizWidget
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -19,6 +19,7 @@ class MainWindow(QMainWindow):
 		self.central_widget = QStackedWidget()
 		self.setObjectName("centralWidget")
 		self.setCentralWidget(self.central_widget)
+		self.setMinimumSize(1024, 640)
 
 		emotion_model_path = cfg.MODELS[cfg.CURR_MODEL]
 		self.emotion_classifier = load_model(emotion_model_path, 
@@ -31,17 +32,16 @@ class MainWindow(QMainWindow):
 		self.central_widget.addWidget(self.menu_widget)
 
 		self.menu_widget.quizBtn.clicked.connect(self.quizWidget)
-		self.menu_widget.freeBtn.clicked.connect(self.freeWidget)
-		self.menu_widget.settingsBtn.clicked.connect(self.settingsWidget)
+		self.menu_widget.freeBtn.clicked.connect(self.detectWidget)
 		self.menu_widget.exitBtn.clicked.connect(self.close)
 
-	def freeWidget(self):
-		free_widget = FreeWidget(cfg, face_detector=self.face_detector, 
+	def detectWidget(self):
+		detect_widget = DetectWidget(cfg, face_detector=self.face_detector, 
 			emotion_classifier=self.emotion_classifier, parent=self)
 
-		self.central_widget.addWidget(free_widget)
-		self.central_widget.setCurrentWidget(free_widget)
-		free_widget.backBtn.clicked.connect(partial(self.backToMenu, widget=free_widget))
+		self.central_widget.addWidget(detect_widget)
+		self.central_widget.setCurrentWidget(detect_widget)
+		detect_widget.backBtn.clicked.connect(partial(self.backToMenu, widget=detect_widget))
 
 	def quizWidget(self):
 		quiz_widget = QuizWidget(cfg, parent=self)
@@ -50,8 +50,6 @@ class MainWindow(QMainWindow):
 		self.central_widget.setCurrentWidget(quiz_widget)
 		quiz_widget.backBtn.clicked.connect(partial(self.backToMenu, widget=quiz_widget))
 
-	def settingsWidget(self):
-		pass
 
 	def backToMenu(self, widget):
 		self.central_widget.setCurrentWidget(self.menu_widget)

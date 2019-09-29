@@ -16,7 +16,7 @@ MODELS = { 'tiny_x' : 'static/models/tiny_exception_0.60_48.hdf5',
  			'simple_cnn' : 'static/models/simple_cnn_0.60_48.hdf5',
  			'swish' : 'static/models/swish_model.52-0.91.hdf5'
  		}
-CURR_MODEL = 'tiny_x'
+CURR_MODEL = 'swish'
 FRONTAL_FACE_DETECTOR = 'static/models/haarcascade_frontalface_default.xml'
 
 BUTTON_TO_EMOTION = {
