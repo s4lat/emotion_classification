@@ -1,4 +1,4 @@
-import cv2
+import cv2, os
 
 PREFFERED_THEME = 'cleanlooks'
 
@@ -7,17 +7,21 @@ IN_WIDTH, IN_HEIGHT = 426, 240
 NOT_SELECTED_COLOR = (0, 255, 0)[::-1] #RGB to BGR
 SELECTED_COLOR = (255, 140, 0)[::-1]
 
-QUIZ_IMAGES_PATH = 'static/quiz/'
+SCRIPT_PATH = os.path.dirname(os.path.realpath(__file__))
 
-MODELS = { 'tiny_x' : 'static/models/tiny_exception_0.60_48.hdf5',
- 			'mini_x' : 'static/models/mini_exception_0.00_64.hdf5',
- 			'big_x' : 'static/models/big_exception_0.66_48.hdf5',
- 			'simpler_cnn' : 'static/models/simpler_cnn_62_48.hdf5',
- 			'simple_cnn' : 'static/models/simple_cnn_0.60_48.hdf5',
- 			'swish' : 'static/models/swish_model.52-0.91.hdf5'
+
+QUIZ_IMAGES_PATH = SCRIPT_PATH+'/static/quiz/'
+FONT_PATH = SCRIPT_PATH+"/static/helvetica.ttf"
+
+MODELS = { 'tiny_x' : SCRIPT_PATH+'/static/models/tiny_exception_0.60_48.hdf5',
+ 			'mini_x' : SCRIPT_PATH+'/static/models/mini_exception_0.00_64.hdf5',
+ 			'big_x' : SCRIPT_PATH+'/static/models/big_exception_0.66_48.hdf5',
+ 			'simpler_cnn' : SCRIPT_PATH+'/static/models/simpler_cnn_62_48.hdf5',
+ 			'simple_cnn' : SCRIPT_PATH+'/static/models/simple_cnn_0.60_48.hdf5',
+ 			'swish' : SCRIPT_PATH+'/static/models/swish_model.52-0.91.hdf5'
  		}
 CURR_MODEL = 'swish'
-FRONTAL_FACE_DETECTOR = 'static/models/haarcascade_frontalface_default.xml'
+FRONTAL_FACE_DETECTOR = SCRIPT_PATH+'/static/models/haarcascade_frontalface_default.xml'
 
 BUTTON_TO_EMOTION = {
 	'angryBtn' : 0,

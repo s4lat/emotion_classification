@@ -101,7 +101,7 @@ class DetectWidget(QWidget):
 
             self.tracker_initiated = False
 
-            fontpath = "static/helvetica.ttf"
+            fontpath = self.cfg.FONT_PATH
             font = ImageFont.truetype(fontpath, 24)
 
             fps = FPS().start()
