@@ -5,6 +5,7 @@ import sys, cfg
 if __name__ == '__main__':
 	app = QApplication(sys.argv)
 	
+	# Установка стиля если он есть
 	if cfg.PREFFERED_THEME in QStyleFactory.keys():
 		app.setStyle(cfg.PREFFERED_THEME)
 

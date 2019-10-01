@@ -35,6 +35,7 @@ class MainWindow(QMainWindow):
 		self.menu_widget.freeBtn.clicked.connect(self.detectWidget)
 		self.menu_widget.exitBtn.clicked.connect(self.close)
 
+	#Открываем окно определения эмоции пользователя
 	def detectWidget(self):
 		detect_widget = DetectWidget(cfg, face_detector=self.face_detector, 
 			emotion_classifier=self.emotion_classifier, parent=self)
@@ -43,6 +44,7 @@ class MainWindow(QMainWindow):
 		self.central_widget.setCurrentWidget(detect_widget)
 		detect_widget.backBtn.clicked.connect(partial(self.backToMenu, widget=detect_widget))
 
+	#Открываем окно определения эмоции пользователем
 	def quizWidget(self):
 		quiz_widget = QuizWidget(cfg, parent=self)
 
@@ -50,7 +52,7 @@ class MainWindow(QMainWindow):
 		self.central_widget.setCurrentWidget(quiz_widget)
 		quiz_widget.backBtn.clicked.connect(partial(self.backToMenu, widget=quiz_widget))
 
-
+	#Возврат в меню
 	def backToMenu(self, widget):
 		self.central_widget.setCurrentWidget(self.menu_widget)
 		widget.close()
