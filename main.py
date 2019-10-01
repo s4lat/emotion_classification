@@ -2,6 +2,7 @@ from imutils.video import VideoStream, FPS
 from widgets.menuWidget import MenuWidget
 from widgets.detectWidget import DetectWidget
 from widgets.quizWidget import QuizWidget
+from widgets.aboutDialog import AboutDialog
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -33,6 +34,7 @@ class MainWindow(QMainWindow):
 
 		self.menu_widget.quizBtn.clicked.connect(self.quizWidget)
 		self.menu_widget.freeBtn.clicked.connect(self.detectWidget)
+		self.menu_widget.abotBtn.clicked.connect(self.aboutDialog)
 		self.menu_widget.exitBtn.clicked.connect(self.close)
 
 	#Открываем окно определения эмоции пользователя
@@ -51,6 +53,12 @@ class MainWindow(QMainWindow):
 		self.central_widget.addWidget(quiz_widget)
 		self.central_widget.setCurrentWidget(quiz_widget)
 		quiz_widget.backBtn.clicked.connect(partial(self.backToMenu, widget=quiz_widget))
+
+	#О программе
+	def aboutDialog(self):
+		about_dialog = AboutDialog(self)
+		about_dialog.show()
+
 
 	#Возврат в меню
 	def backToMenu(self, widget):
