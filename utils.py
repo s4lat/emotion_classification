@@ -1,5 +1,7 @@
 import cv2
 
+
+#Рисование рамки со скругленными уголками
 def draw_border(img, pt1, pt2, color, thickness, r, d):
     x1,y1 = pt1
     x2,y2 = pt2
@@ -24,6 +26,7 @@ def draw_border(img, pt1, pt2, color, thickness, r, d):
     cv2.line(img, (x2, y2 - r), (x2, y2 - r - d), color, thickness, cv2.LINE_AA)
     cv2.ellipse(img, (x2 - r, y2 - r), (r, r), 0, 0, 90, color, thickness, cv2.LINE_AA)
 
+#Рисование текста с фоном
 def draw_text_w_background(img, text, coords, font, fontScale, fontColor, bgColor, thickness):
 	lines = text.split("\n")
 	(x, y) = coords

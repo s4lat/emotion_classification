@@ -36,7 +36,6 @@ class FrameWidget(QWidget):
 
         qp.end()
 
-
     def click(self, event):
         coords = event.pos()
         coords = (coords.x(), coords.y())
@@ -69,6 +68,7 @@ class DetectWidget(QWidget):
         self.setupUi(self)
         self.last_setup_ui()
 
+    #Выбрать лицо
     def chooseFace(self, coords):
         mX, mY = coords
 
@@ -89,11 +89,12 @@ class DetectWidget(QWidget):
                     self.tracker.init(self.gray, face_bb)
                     self.tracker_initiated = True
                     self.resetBtn.setEnabled(True)
-
+    #сбросить лицо
     def resetFace(self):
         self.tracker_initiated = False
         self.resetBtn.setEnabled(False)
 
+    #Функция для оброботки видео, запускается в отдельном потоке
     def grab(self, cam, queue):
         try:
             cap = VideoStream(src=0).start()
@@ -119,7 +120,6 @@ class DetectWidget(QWidget):
                 scale_y = self.cfg.IN_HEIGHT / OUT_HEIGHT
 
                 frame = cap.read()
-                frame = cv2.flip(frame, 1)
 
                 gray = cv2.resize(frame, (self.cfg.IN_WIDTH, self.cfg.IN_HEIGHT))
                 gray = cv2.cvtColor(gray, cv2.COLOR_BGR2GRAY)
@@ -199,6 +199,7 @@ class DetectWidget(QWidget):
         finally:
             cap.stop()
 
+    #Обновление показателей ползунков и камеры
     def update_widget(self):
         if not self.q.empty():
             #Update camForm
@@ -222,9 +223,10 @@ class DetectWidget(QWidget):
             self.surpriseBar.setProperty("value", data['emotions'][5])
             self.neutralBar.setProperty("value", data['emotions'][6])
 
+    #Отключение потока вместе с виджетом
     def closeEvent(self, event):
         self.running = False
-
+    
     def last_setup_ui(self):
         self.resetBtn.clicked.connect(self.resetFace)
 

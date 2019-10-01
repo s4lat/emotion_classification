@@ -20,7 +20,7 @@ MODELS = { 'tiny_x' : SCRIPT_PATH+'/static/models/tiny_exception_0.60_48.hdf5',
  			'simple_cnn' : SCRIPT_PATH+'/static/models/simple_cnn_0.60_48.hdf5',
  			'swish' : SCRIPT_PATH+'/static/models/swish_model.52-0.91.hdf5'
  		}
-CURR_MODEL = 'swish'
+CURR_MODEL = 'big_x'
 FRONTAL_FACE_DETECTOR = SCRIPT_PATH+'/static/models/haarcascade_frontalface_default.xml'
 
 BUTTON_TO_EMOTION = {

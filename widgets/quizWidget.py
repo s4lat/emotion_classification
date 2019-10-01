@@ -30,6 +30,7 @@ class QuizWidget(QWidget):
         self.last_setup_ui()
         self.drawImage()
 
+    #Смена изображения подключено к imgLabel
     def nextImage(self, *args):
         if self.correct == None:
             return
@@ -44,18 +45,18 @@ class QuizWidget(QWidget):
         self.drawImage()
         self.updateLabels()
 
+    #Проверка ответа пользователя, привязано к emotionBtns
     def checkAnswer(self, btn):
         if self.cfg.BUTTON_TO_EMOTION[btn.objectName()] == self.labels[self.ind]:
             self.correct = True
             self.good += 1
-            self.drawImage()
         else:
             self.correct = False
             self.bad += 1
-            self.drawImage()
 
         self.updateLabels(self.cfg.BUTTON_TO_EMOTION[btn.objectName()])
 
+    #Обновление лейбла счета и лейбла вопроса/правильного/неправльного ответа, вкл/выкл кнопок ответа
     def updateLabels(self, emotion=None):
         if emotion:
             if self.correct:
@@ -65,17 +66,20 @@ class QuizWidget(QWidget):
                     (self.cfg.EMOTIONS_RUS[emotion].lower(), 
                     self.cfg.EMOTIONS_RUS[self.labels[self.ind]].lower()))
 
+            #Отключение кнопок ответа, на время пока пользователь читает правильно ли он ответил
             self.disgustBtn.setEnabled(False)
             self.scaredBtn.setEnabled(False)
-            self.angryBtn.setEnabled(False)
             self.sadBtn.setEnabled(False)
             self.surprisedBtn.setEnabled(False)
             self.happyBtn.setEnabled(False)
             self.neutralBtn.setEnabled(False)
+            self.angryBtn.setEnabled(False)
+
 
         else:
             self.qLabel.setText(self.cfg.TOP_NEUTRAL_LABEL)
 
+            #Включение кнопок обратно
             self.disgustBtn.setEnabled(True)
             self.scaredBtn.setEnabled(True)
             self.angryBtn.setEnabled(True)
@@ -89,13 +93,16 @@ class QuizWidget(QWidget):
 
         # self.qLabel.adjustSize() if label not refreshing
 
+    #Отрисовка изображения в imgLabel
     def drawImage(self):
+        print(self.images[self.ind])
         self.imgLabel.setPixmap(
             QPixmap(self.cfg.QUIZ_IMAGES_PATH + self.images[self.ind]).scaled(
                 self.imgLabel.frameGeometry().width(), self.imgLabel.frameGeometry().height(),
                 Qt.KeepAspectRatio))
         self.imgLabel.update()
 
+    #Загружаем изображения
     def load_images(self):
         images = os.listdir(self.cfg.QUIZ_IMAGES_PATH)
         images = [i for i in images if not i.startswith('.')]
@@ -119,7 +126,7 @@ class QuizWidget(QWidget):
         images = [img for img in images if img]
 
         return labels, images
-
+        
     def last_setup_ui(self):
         self.imgLabel.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
         self.imgLabel.setScaledContents(True)
