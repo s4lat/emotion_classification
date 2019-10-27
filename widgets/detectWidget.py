@@ -89,7 +89,7 @@ class DetectWidget(QWidget):
                     self.tracker.init(self.gray, face_bb)
                     self.tracker_initiated = True
                     self.resetBtn.setEnabled(True)
-    #сбросить лицо
+    #Сбросить лицо
     def resetFace(self):
         self.tracker_initiated = False
         self.resetBtn.setEnabled(False)

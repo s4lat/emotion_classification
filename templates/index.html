@@ -1,0 +1,25 @@
+<html>
+  <head>
+    <title>Pi Video Surveillance</title>
+  </head>
+  <body>
+    <h1>Pi Video Surveillance</h1>
+    <img src="{{ url_for('video_feed') }}" style="width:640px;height:360px;">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> 
+    <script> 
+    	const xhttp = new XMLHttpRequest();
+    	$(document).ready(function() {
+		    $("img").on("click", function(event) {
+		        var x = event.pageX - this.offsetLeft;
+		        var y = event.pageY - this.offsetTop;
+		        var w = this.width;
+		        var h = this.height;
+
+		        xhttp.open("POST", `choose_face?x=${x}&y=${y}&w=${w}&h=${h}`);
+		        xhttp.send();
+		    });
+		});
+    </script>
+  </body>
+</html>
