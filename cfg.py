@@ -3,6 +3,7 @@ import cv2, os
 PREFFERED_THEME = 'cleanlooks' #Предпочитаемая тема
 
 IN_WIDTH, IN_HEIGHT = 426, 240
+OUT_WIDTH, OUT_HEIGHT = 1280, 720
 
 NOT_SELECTED_COLOR = (0, 255, 0)[::-1] #RGB to BGR
 SELECTED_COLOR = (255, 140, 0)[::-1]
@@ -42,7 +43,7 @@ EMOTIONS_RUS = ["Злость" ,"Отвращение","Испуг", "Счаст
  "Спокойствие"] #Эмоции на русском
 
 font                   = cv2.FONT_HERSHEY_SIMPLEX
-fontScale              = 0.5
+fontScale              = 0.8
 fontColor              = (255, 255, 255)[::-1]
 bgColor                = (255, 0, 0)[::-1]
 lineType               = cv2.LINE_AA
