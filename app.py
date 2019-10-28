@@ -1,5 +1,5 @@
 from flask import Flask, Response, render_template, request, jsonify
-import threading, argparse, datetime, imutils, cv2, time
+import threading, argparse, datetime, imutils, cv2, time, cfg, os
 from keras.preprocessing.image import img_to_array
 from socket import gethostbyname, gethostname
 from PIL import ImageFont, ImageDraw, Image
@@ -9,7 +9,6 @@ from keras import backend as K
 from gevent.pywsgi import WSGIServer
 from utils import *
 import numpy as np
-import cfg
 
 def swish_activation(x):
 	return (K.sigmoid(x) * x)
@@ -29,7 +28,6 @@ font = ImageFont.truetype(fontpath, 32)
 outputFrame = None
 lock = threading.Lock()
 
-
 faces = []
 emotions = []
 tracker_initiated = False
@@ -42,8 +40,23 @@ vs = VideoStream(src=0).start()
 time.sleep(2.0)
 
 @app.route("/")
+@app.route("/detect")
 def index():
-	return render_template("index.html")
+	return render_template("detect.html")
+
+@app.route("/quiz")
+def quiz():
+	return render_template("quiz.html")
+
+@app.route("/get_image_list")
+def get_image_list():
+	images = os.listdir(cfg.QUIZ_IMAGES_PATH)
+
+	for img in images:
+		if img.startswith('.'):
+			images.pop(images.index(img))
+
+	return jsonify(images)
 
 @app.route("/get_emotions", methods=["GET"])
 def get_emotions():
@@ -103,80 +116,84 @@ def detect_emotion():
 	CURRENT_FPS = 0
 	frame_ind = 0
 	while True:
-		out_frame = vs.read()
-		out_frame = cv2.resize(out_frame, (cfg.OUT_WIDTH, cfg.OUT_HEIGHT))
+		try:
+			out_frame = vs.read()
+			out_frame = cv2.resize(out_frame, (cfg.OUT_WIDTH, cfg.OUT_HEIGHT))
 
-		gray = cv2.resize(out_frame, (cfg.IN_WIDTH, cfg.IN_HEIGHT))
-		gray = cv2.cvtColor(gray, cv2.COLOR_BGR2GRAY)
+			gray = cv2.resize(out_frame, (cfg.IN_WIDTH, cfg.IN_HEIGHT))
+			gray = cv2.cvtColor(gray, cv2.COLOR_BGR2GRAY)
 
-		scale_x = cfg.IN_WIDTH / cfg.OUT_WIDTH
-		scale_y = cfg.IN_HEIGHT / cfg.OUT_HEIGHT
+			scale_x = cfg.IN_WIDTH / cfg.OUT_WIDTH
+			scale_y = cfg.IN_HEIGHT / cfg.OUT_HEIGHT
 
-		if tracker_initiated:
-			success, box = tracker.update(gray)
+			if tracker_initiated:
+				success, box = tracker.update(gray)
 
-			if success:
-				x, y, w, h = [int(i) for i in box]
+				if success:
+					x, y, w, h = [int(i) for i in box]
 
-				x = 0 if x < 0 else (cfg.IN_WIDTH-1 if x > cfg.IN_WIDTH-1 else x)
-				y = 0 if y < 0 else (cfg.IN_HEIGHT-1 if y > cfg.IN_HEIGHT-1 else y)
+					x = 0 if x < 0 else (cfg.IN_WIDTH-1 if x > cfg.IN_WIDTH-1 else x)
+					y = 0 if y < 0 else (cfg.IN_HEIGHT-1 if y > cfg.IN_HEIGHT-1 else y)
 
-				roi = gray[y:y+h, x:x+w]
-				roi = cv2.resize(roi, input_shape, interpolation=cv2.INTER_AREA)
-				roi = roi.astype("float") / 255.0
-				roi = img_to_array(roi)
-				roi = np.expand_dims(roi, axis=0)
-				preds = emotion_classifier.predict(roi)[0]
+					roi = gray[y:y+h, x:x+w]
+					roi = cv2.resize(roi, input_shape, interpolation=cv2.INTER_AREA)
+					roi = roi.astype("float") / 255.0
+					roi = img_to_array(roi)
+					roi = np.expand_dims(roi, axis=0)
+					preds = emotion_classifier.predict(roi)[0]
 
-				with lock:
-					emotions = [int(emotion*100) for emotion in preds]
+					with lock:
+						emotions = [int(emotion*100) for emotion in preds]
 
-				emotion = np.argmax(preds)
+					emotion = np.argmax(preds)
 
-				x, y, w, h = (x//scale_x, y//scale_y, w//scale_x, h//scale_y)
-				x, y, w, h = (int(x), int(y), int(w), int(h))
+					x, y, w, h = (x//scale_x, y//scale_y, w//scale_x, h//scale_y)
+					x, y, w, h = (int(x), int(y), int(w), int(h))
 
-				draw_border(out_frame, (x, y), (x+w, y+h), cfg.SELECTED_COLOR, 3, 5, 30)
+					draw_border(out_frame, (x, y), (x+w, y+h), cfg.SELECTED_COLOR, 3, 5, 30)
 
-				out_frame = Image.fromarray(out_frame)
-				draw = ImageDraw.Draw(out_frame)
+					out_frame = Image.fromarray(out_frame)
+					draw = ImageDraw.Draw(out_frame)
 
-				tW, tH = font.getsize(cfg.EMOTIONS_RUS[emotion])
-				draw.rectangle(((x-2, y+h+5), (x+tW+2, y+h+tH+2)), fill = cfg.SELECTED_COLOR)
-				draw.text((x, y+h),  cfg.EMOTIONS_RUS[emotion], font = font, fill = (255, 255, 255, 255))
+					tW, tH = font.getsize(cfg.EMOTIONS_RUS[emotion])
+					draw.rectangle(((x-2, y+h+5), (x+tW+2, y+h+tH+2)), fill = cfg.SELECTED_COLOR)
+					draw.text((x, y+h),  cfg.EMOTIONS_RUS[emotion], font = font, fill = (255, 255, 255, 255))
 
-				out_frame = np.array(out_frame)
+					out_frame = np.array(out_frame)
+				else:
+					reset_face()
 			else:
-				reset_face()
-		else:
-			faces = face_detector.detectMultiScale(gray)
+				faces = face_detector.detectMultiScale(gray)
 
-			for x, y, w, h in faces:
-				x, y, w, h = (x//scale_x, y//scale_y, w//scale_x, h//scale_y)
-				x, y, w, h = (int(x), int(y), int(w), int(h))
+				for x, y, w, h in faces:
+					x, y, w, h = (x//scale_x, y//scale_y, w//scale_x, h//scale_y)
+					x, y, w, h = (int(x), int(y), int(w), int(h))
 
-				draw_border(out_frame, (x, y), (x+w, y+h), cfg.NOT_SELECTED_COLOR, 3, 5, 30)
+					draw_border(out_frame, (x, y), (x+w, y+h), cfg.NOT_SELECTED_COLOR, 3, 5, 30)
 
-        #Draw fps
-		draw_text_w_background(out_frame, 'FPS: %.2f' % CURRENT_FPS,
-			(20, 20),
-			cfg.font, cfg.fontScale,
-			cfg.fontColor, cfg.bgColor, 1)
+	        #Draw fps
+			draw_text_w_background(out_frame, 'FPS: %.2f' % CURRENT_FPS,
+				(20, 20),
+				cfg.font, cfg.fontScale,
+				cfg.fontColor, cfg.bgColor, 1)
 
-		fps.update()
+			fps.update()
 
-		if (frame_ind == 10):
-			fps.stop()
+			if (frame_ind == 10):
+				fps.stop()
 
-			CURRENT_FPS = fps.fps()
-			fps = FPS().start()
-			frame_ind = 0
+				CURRENT_FPS = fps.fps()
+				fps = FPS().start()
+				frame_ind = 0
 
-		# cv2.circle(gray, , 1, (255, 255, 0), -1)
-		with lock:
-			outputFrame = out_frame.copy()
+			# cv2.circle(gray, , 1, (255, 255, 0), -1)
+			with lock:
+				outputFrame = out_frame.copy()
 
-		frame_ind += 1
+			frame_ind += 1
+		except Exception as e:
+			print(e)
+			continue
 
 def generate():
 	global outputFrame, lock
@@ -184,7 +201,7 @@ def generate():
 	while True:
 		if outputFrame is None:
 			continue
-
+		
 		(flag, encodedImage) = cv2.imencode(".jpg", outputFrame)
 
 		if not flag:

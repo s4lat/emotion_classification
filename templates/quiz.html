@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block container %}
+	<div id="start_btn_row" class="row eq-height justify-content-md-center" style="margin-top: 64px;">
+			<button id="start_btn" class="btn-lg col-sm btn-warning"> Начать новое тестирование </button>
+	</div>
+
+	<div id="quiz">
+		<div class="row justify-content-md-center">
+			<span class="col-sm-1"></span>
+			<img id="quizImg" class="img-fluid col-sm-10" src="../static/mock.jpg"/>
+			<span id="totalLabel" class="col-sm-1"> Пройдено: 0</span>
+		</div>
+
+		<div class="row eq-height justify-content-md-center">
+			<button onclick="window.check_answer(0);" class="btn-lg btn-info col-sm-3 ml-2 mr-2 mt-3"> Злость </button>
+			<button onclick="window.check_answer(1);" class="btn-lg btn-info col-sm-3 ml-2 mr-2 mt-3"> Отвращение </button>
+			<button onclick="window.check_answer(2);" class="btn-lg btn-info col-sm-3 ml-2 mr-2 mt-3"> Испуг </button>
+		</div>
+		<div class="row eq-height justify-content-md-center">
+			<button onclick="window.check_answer(3);" class="btn-lg btn-info col-sm-3 ml-2 mr-2 mt-3"> Счастье </button>
+			<button onclick="window.check_answer(4);" class="btn-lg btn-info col-sm-3 ml-2 mr-2 mt-3"> Грусть </button>
+			<button onclick="window.check_answer(5);" class="btn-lg btn-info col-sm-3 ml-2 mr-2 mt-3"> Удивление </button>
+		</div>
+		<div class="row eq-height justify-content-md-center">
+			<div class="col-sm-3 ml-2 mr-2"> </div>
+			<button onclick="window.check_answer(6);" class="btn-lg btn-info col-sm-3 ml-2 mr-2 mt-3"> Спокойствие </button>
+			<button id="exit_btn" class="btn-lg btn-warning col-sm-3 ml-2 mr-2 mt-3"> Закончить </button>
+		</div>
+	</div>
+	<script>
+		var total = 0;
+		var score = 0;
+		var images = null;
+		var quizImage = null;
+		var goodAnsw = null;
+		var answers= [];
+
+		function init_quiz(){
+			let img_ind = Math.floor(Math.random() * images.length);
+        	quizImage = images[img_ind];
+        	images.splice(img_ind, 1);
+        	goodAnsw = parseInt(quizImage.split(".")[0].split("%")[1]);
+		}
+
+		function check_answer(answ){
+			total += 1;
+			if (answ == goodAnsw){
+				score += 1;
+			}
+
+			answers.push([quizImage, goodAnsw, answ]);
+
+			if (images.length == 0){
+				$.ajax({
+		        type : 'GET',
+		        url : 'get_image_list',
+		        success : function(data){
+					images = data;
+					let img_ind = Math.floor(Math.random() * images.length);
+        			quizImage = images[img_ind];
+        			images.splice(img_ind, 1);
+        			goodAnsw = parseInt(quizImage.split(".")[0].split("%")[1]);
+        			update_quiz();
+		        }});
+
+			} else {
+				let img_ind = Math.floor(Math.random() * images.length);
+	        	quizImage = images[img_ind];
+	        	images.splice(img_ind, 1);
+	        	goodAnsw = parseInt(quizImage.split(".")[0].split("%")[1]);
+	        	update_quiz();
+			}
+		}
+
+		function update_quiz(){
+			$("#quizImg").attr("src", "../static/quiz/" + quizImage);
+			$("#totalLabel").text(`Пройдено: ${window.total}`);
+		}
+	</script>
+
+	<script>
+		$(document).ready(function() {
+			$("#start_btn_row").css("display", "block");
+
+			$("#start_btn").on("click", function(event) {
+				$.ajax({
+		        type : 'GET',
+		        url : 'get_image_list',
+		        success : function(data){
+		        	if (data.length < 0) return 0;
+					$("#start_btn_row").css("display", "none");
+		        	window.images = data;
+		        	window.init_quiz();
+		        	window.update_quiz();
+		        }});
+
+				$("#quiz").css("display", "block");
+		    });
+		});
+	</script>
+{% endblock %}
