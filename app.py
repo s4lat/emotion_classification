@@ -60,12 +60,11 @@ def get_image_list():
 
 @app.route("/get_emotions", methods=["GET"])
 def get_emotions():
-	with lock:
-		if tracker_initiated:
-			global emotions
-			return jsonify(emotions)
-		else:
-			return jsonify([])
+	if tracker_initiated:
+		global emotions
+		return jsonify(emotions)
+	else:
+		return jsonify([])
 
 @app.route("/video_feed")
 def video_feed():
@@ -91,19 +90,17 @@ def choose_face():
 			print(x, y, w, h)
 			if (x <= mX <= x+w) and (y <= mY <= y+h):
 				face_bb = (x, y, w, h)
-				with lock:
-					tracker = cv2.TrackerMOSSE_create()
-					tracker.init(gray, face_bb)
-					tracker_initiated = True
+				tracker = cv2.TrackerMOSSE_create()
+				tracker.init(gray, face_bb)
+				tracker_initiated = True
 
 	return '1'
 
 @app.route("/reset_face")
 def reset_face():
-	with lock:
-		global tracker_initiated, emotions
-		tracker_initiated = False
-		emotions = []
+	global tracker_initiated, emotions
+	tracker_initiated = False
+	emotions = []
 
 	return '1'
 
@@ -115,6 +112,10 @@ def detect_emotion():
 	fps = FPS().start()
 	CURRENT_FPS = 0
 	frame_ind = 0
+
+	scale_x = cfg.SCALE_WIDTH
+	scale_y = cfg.SCALE_HEIGHT
+
 	while True:
 		try:
 			out_frame = vs.read()
@@ -122,9 +123,6 @@ def detect_emotion():
 
 			gray = cv2.resize(out_frame, (cfg.IN_WIDTH, cfg.IN_HEIGHT))
 			gray = cv2.cvtColor(gray, cv2.COLOR_BGR2GRAY)
-
-			scale_x = cfg.IN_WIDTH / cfg.OUT_WIDTH
-			scale_y = cfg.IN_HEIGHT / cfg.OUT_HEIGHT
 
 			if tracker_initiated:
 				success, box = tracker.update(gray)
@@ -142,8 +140,8 @@ def detect_emotion():
 					roi = np.expand_dims(roi, axis=0)
 					preds = emotion_classifier.predict(roi)[0]
 
-					with lock:
-						emotions = [int(emotion*100) for emotion in preds]
+
+					emotions = [int(emotion*100) for emotion in preds]
 
 					emotion = np.argmax(preds)
 
@@ -187,8 +185,8 @@ def detect_emotion():
 				frame_ind = 0
 
 			# cv2.circle(gray, , 1, (255, 255, 0), -1)
-			with lock:
-				outputFrame = out_frame.copy()
+			
+			outputFrame = out_frame.copy()
 
 			frame_ind += 1
 		except Exception as e:
