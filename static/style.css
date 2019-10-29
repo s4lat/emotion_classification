@@ -11,7 +11,7 @@
 	margin-top: 10px;
 }
 
-#quiz, #start_btn_row
+#quiz_row, #start_btn_row, #result_row
 {
 	display: none;
 }

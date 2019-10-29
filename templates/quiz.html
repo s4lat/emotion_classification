@@ -1,11 +1,17 @@
 {% extends "base.html" %}
 
 {% block container %}
+	<div id="result_row" class="row eq-height justify-content-md-center" style="margin-top: 64px;">
+			<span id="total_result" class="col-sm-1"></span>
+			<span id="total_good" class="col-sm-1"></span>
+			<span id="total_bad" class="col-sm-1"></span>
+	</div>
+
 	<div id="start_btn_row" class="row eq-height justify-content-md-center" style="margin-top: 64px;">
 			<button id="start_btn" class="btn-lg col-sm btn-warning"> Начать новое тестирование </button>
 	</div>
 
-	<div id="quiz">
+	<div id="quiz_row">
 		<div class="row justify-content-md-center">
 			<span class="col-sm-1"></span>
 			<img id="quizImg" class="img-fluid col-sm-10" src="../static/mock.jpg"/>
@@ -25,7 +31,7 @@
 		<div class="row eq-height justify-content-md-center">
 			<div class="col-sm-3 ml-2 mr-2"> </div>
 			<button onclick="window.check_answer(6);" class="btn-lg btn-info col-sm-3 ml-2 mr-2 mt-3"> Спокойствие </button>
-			<button id="exit_btn" class="btn-lg btn-warning col-sm-3 ml-2 mr-2 mt-3"> Закончить </button>
+			<button onclick="window.finish_quiz();" id="exit_btn" class="btn-lg btn-warning col-sm-3 ml-2 mr-2 mt-3"> Закончить </button>
 		</div>
 	</div>
 	<script>
@@ -37,45 +43,58 @@
 		var answers= [];
 
 		function init_quiz(){
+			window.total = 0;
+			window.score = 0;
+			window.answers = []
 			let img_ind = Math.floor(Math.random() * images.length);
-        	quizImage = images[img_ind];
-        	images.splice(img_ind, 1);
-        	goodAnsw = parseInt(quizImage.split(".")[0].split("%")[1]);
+        	window.quizImage = images[img_ind];
+        	window.images.splice(img_ind, 1);
+        	window.goodAnsw = parseInt(quizImage.split(".")[0].split("%")[1]);
 		}
 
 		function check_answer(answ){
-			total += 1;
-			if (answ == goodAnsw){
-				score += 1;
+			window.total += 1;
+			if (answ == window.goodAnsw){
+				window.score += 1;
 			}
 
-			answers.push([quizImage, goodAnsw, answ]);
+			answers.push([window.quizImage, window.goodAnsw, window.answ]);
 
 			if (images.length == 0){
 				$.ajax({
 		        type : 'GET',
 		        url : 'get_image_list',
 		        success : function(data){
-					images = data;
-					let img_ind = Math.floor(Math.random() * images.length);
-        			quizImage = images[img_ind];
-        			images.splice(img_ind, 1);
-        			goodAnsw = parseInt(quizImage.split(".")[0].split("%")[1]);
+					window.images = data;
+					let img_ind = Math.floor(Math.random() * window.images.length);
+        			window.quizImage = window.images[img_ind];
+        			window.images.splice(img_ind, 1);
+        			window.goodAnsw = parseInt(window.quizImage.split(".")[0].split("%")[1]);
         			update_quiz();
 		        }});
 
 			} else {
 				let img_ind = Math.floor(Math.random() * images.length);
-	        	quizImage = images[img_ind];
-	        	images.splice(img_ind, 1);
-	        	goodAnsw = parseInt(quizImage.split(".")[0].split("%")[1]);
+	        	window.quizImage = window.images[img_ind];
+	        	window.images.splice(img_ind, 1);
+	        	window.goodAnsw = parseInt(window.quizImage.split(".")[0].split("%")[1]);
 	        	update_quiz();
 			}
 		}
 
 		function update_quiz(){
-			$("#quizImg").attr("src", "../static/quiz/" + quizImage);
-			$("#totalLabel").text(`Пройдено: ${window.total}`);
+			$("#quizImg").attr("src", "../static/quiz/" + window.quizImage);
+			$("#totalLabel").text(`Пройдено: ${total}`);
+		}
+
+		function finish_quiz(){
+			$("#total_result").text(`Пройдено: ${window.total}`);
+			$("#total_good").text(`Верных ответов: ${window.score}`);
+			$("#total_bad").text(`Неверных ответов: ${window.total-window.score}`);
+
+			$("#quiz_row").css("display", "none");
+			$("#result_row").css("display", "block");
+			$("#start_btn_row").css("display", "block");
 		}
 	</script>
 
@@ -95,7 +114,8 @@
 		        	window.update_quiz();
 		        }});
 
-				$("#quiz").css("display", "block");
+				$("#result_row").css("display", "none");
+				$("#quiz_row").css("display", "block");
 		    });
 		});
 	</script>
