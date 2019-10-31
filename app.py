@@ -10,6 +10,8 @@ from gevent.pywsgi import WSGIServer
 from utils import *
 import numpy as np
 
+lock = threading.Lock()
+
 def swish_activation(x):
 	return (K.sigmoid(x) * x)
 
@@ -26,7 +28,6 @@ fontpath = cfg.FONT_PATH
 font = ImageFont.truetype(fontpath, 32)
 
 outputFrame = None
-lock = threading.Lock()
 
 faces = []
 emotions = []
@@ -37,7 +38,6 @@ gray = None
 app = Flask(__name__)
 
 vs = VideoStream(src=0).start()
-time.sleep(2.0)
 
 @app.route("/")
 @app.route("/detect")
@@ -60,11 +60,14 @@ def get_image_list():
 
 @app.route("/get_emotions", methods=["GET"])
 def get_emotions():
-	if tracker_initiated:
-		global emotions
-		return jsonify(emotions)
-	else:
-		return jsonify([])
+	global tracker_initiated
+
+	with lock:
+		if tracker_initiated:
+			global emotions
+			return jsonify(emotions)
+		else:
+			return jsonify([])
 
 @app.route("/video_feed")
 def video_feed():
@@ -73,7 +76,7 @@ def video_feed():
 
 @app.route("/choose_face", methods=["GET"])
 def choose_face():
-	global tracker, tracker_initiated, gray, faces
+	global tracker, tracker_initiated, gray, faces, lock
 
 	if not tracker_initiated:
 		mX, mY = int(request.args.get("x")), int(request.args.get("y"))
@@ -85,27 +88,28 @@ def choose_face():
 		mX *= scale_x
 		mY *= scale_y
 
-		print(mX, mY)
 		for x, y, w, h in faces:
-			print(x, y, w, h)
 			if (x <= mX <= x+w) and (y <= mY <= y+h):
 				face_bb = (x, y, w, h)
-				tracker = cv2.TrackerMOSSE_create()
-				tracker.init(gray, face_bb)
-				tracker_initiated = True
+				with lock:
+					tracker = cv2.TrackerMOSSE_create()
+					tracker.init(gray, face_bb)
+					tracker_initiated = True
 
 	return '1'
 
 @app.route("/reset_face")
 def reset_face():
 	global tracker_initiated, emotions
-	tracker_initiated = False
-	emotions = []
+
+	with lock:
+		tracker_initiated = False
+		emotions = []
 
 	return '1'
 
 def detect_emotion():
-	global vs, outputFrame, lock, tracker
+	global vs, outputFrame, tracker
 	global faces, gray, tracker_initiated
 	global emotions
 
@@ -121,11 +125,13 @@ def detect_emotion():
 			out_frame = vs.read()
 			out_frame = cv2.resize(out_frame, (cfg.OUT_WIDTH, cfg.OUT_HEIGHT))
 
-			gray = cv2.resize(out_frame, (cfg.IN_WIDTH, cfg.IN_HEIGHT))
-			gray = cv2.cvtColor(gray, cv2.COLOR_BGR2GRAY)
+			with lock:
+				gray = cv2.resize(out_frame, (cfg.IN_WIDTH, cfg.IN_HEIGHT))
+				gray = cv2.cvtColor(gray, cv2.COLOR_BGR2GRAY)
 
 			if tracker_initiated:
-				success, box = tracker.update(gray)
+				with lock:
+					success, box = tracker.update(gray)
 
 				if success:
 					x, y, w, h = [int(i) for i in box]
@@ -133,15 +139,17 @@ def detect_emotion():
 					x = 0 if x < 0 else (cfg.IN_WIDTH-1 if x > cfg.IN_WIDTH-1 else x)
 					y = 0 if y < 0 else (cfg.IN_HEIGHT-1 if y > cfg.IN_HEIGHT-1 else y)
 
-					roi = gray[y:y+h, x:x+w]
+					with lock:
+						roi = gray[y:y+h, x:x+w]
+
 					roi = cv2.resize(roi, input_shape, interpolation=cv2.INTER_AREA)
 					roi = roi.astype("float") / 255.0
 					roi = img_to_array(roi)
 					roi = np.expand_dims(roi, axis=0)
 					preds = emotion_classifier.predict(roi)[0]
 
-
-					emotions = [int(emotion*100) for emotion in preds]
+					with lock:
+						emotions = [int(emotion*100) for emotion in preds]
 
 					emotion = np.argmax(preds)
 
@@ -161,13 +169,14 @@ def detect_emotion():
 				else:
 					reset_face()
 			else:
-				faces = face_detector.detectMultiScale(gray)
+				with lock:
+					faces = face_detector.detectMultiScale(gray)
 
-				for x, y, w, h in faces:
-					x, y, w, h = (x//scale_x, y//scale_y, w//scale_x, h//scale_y)
-					x, y, w, h = (int(x), int(y), int(w), int(h))
+					for x, y, w, h in faces:
+						x, y, w, h = (x//scale_x, y//scale_y, w//scale_x, h//scale_y)
+						x, y, w, h = (int(x), int(y), int(w), int(h))
 
-					draw_border(out_frame, (x, y), (x+w, y+h), cfg.NOT_SELECTED_COLOR, 3, 5, 30)
+						draw_border(out_frame, (x, y), (x+w, y+h), cfg.NOT_SELECTED_COLOR, 3, 5, 30)
 
 	        #Draw fps
 			draw_text_w_background(out_frame, 'FPS: %.2f' % CURRENT_FPS,
@@ -184,9 +193,8 @@ def detect_emotion():
 				fps = FPS().start()
 				frame_ind = 0
 
-			# cv2.circle(gray, , 1, (255, 255, 0), -1)
-			
-			outputFrame = out_frame.copy()
+			with lock:
+				outputFrame = out_frame.copy()
 
 			frame_ind += 1
 		except Exception as e:
@@ -194,33 +202,34 @@ def detect_emotion():
 			continue
 
 def generate():
-	global outputFrame, lock
+	global outputFrame
 
-	while True:
-		if outputFrame is None:
-			continue
-		
-		(flag, encodedImage) = cv2.imencode(".jpg", outputFrame)
+	try:
+		while True:
+			with lock:
+				if outputFrame is None:
+					continue
 
-		if not flag:
-			continue
+				(flag, encodedImage) = cv2.imencode(".jpg", outputFrame)
 
-		yield(b'--frame\r\n' 
-			b'Content-Type: image/jpeg\r\n\r\n' + bytearray(encodedImage) + b'\r\n')
+			if not flag:
+				continue
+
+			yield(b'--frame\r\n' 
+				b'Content-Type: image/jpeg\r\n\r\n' + bytearray(encodedImage) + b'\r\n')
+
+	except GeneratorExit:
+		return '1'
+
 
 
 if __name__ == "__main__":
 	t = threading.Thread(target=detect_emotion)
 	t.daemon = True
 	t.start()
-
+	
 	app.run('0.0.0.0', '80', debug=True, 
 		threaded=True, use_reloader=False)
-	
-	# http_server = WSGIServer(('', 80), app)
-	# print(gethostbyname('localhost'))
-	# print("Serving on %s" % gethostbyname(gethostname()))
-	# http_server.serve_forever()
 
 vs.stop()
 

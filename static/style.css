@@ -30,7 +30,7 @@
 
 	#quizImg
 	{
-		max-height: 250px;
+		height: 200px;
 	}
 }
 
@@ -47,6 +47,6 @@
 	}
 	#quizImg
 	{
-		max-height: 500px;
+		height: 450px;
 	}
 }

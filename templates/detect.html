@@ -67,7 +67,8 @@
     </script>
 
     <script>
-    	(function update() {
+    	$(document).ready(
+    		function update() {
 		    $.ajax({
 		        type : 'GET',
 		        url : 'get_emotions',
@@ -107,6 +108,6 @@
 		    }).then(function() {           // on completion, restart
 		       setTimeout(update, 1000);  // function refers to itself
 		    });
-		})(); 
+		}); 
     </script>
 {% endblock %}

@@ -4,4 +4,3 @@ imutils
 numpy
 Keras
 opencv_contrib_python
-PyQt5

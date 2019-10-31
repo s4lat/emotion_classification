@@ -1,10 +1,17 @@
 {% extends "base.html" %}
 
 {% block container %}
-	<div id="result_row" class="row eq-height justify-content-md-center" style="margin-top: 64px;">
-			<span id="total_result" class="col-sm-1"></span>
-			<span id="total_good" class="col-sm-1"></span>
-			<span id="total_bad" class="col-sm-1"></span>
+  	<script src="../static/plotly.min.js"> </script>
+	
+	<div id="result_row">
+		<div class="row eq-height justify-content-md-center" style="margin-top: 64px;">
+				<span id="total_result" class="col-sm-3"></span>
+				<span id="total_good" class="col-sm-3"></span>
+				<span id="total_bad" class="col-sm-3"></span>
+		</div>
+		<div align="center" style="margin-top: 64px;">
+				<div id="result_plots"></div>
+		</div>
 	</div>
 
 	<div id="start_btn_row" class="row eq-height justify-content-md-center" style="margin-top: 64px;">
@@ -14,7 +21,7 @@
 	<div id="quiz_row">
 		<div class="row justify-content-md-center">
 			<span class="col-sm-1"></span>
-			<img id="quizImg" class="img-fluid col-sm-10" src="../static/mock.jpg"/>
+			<img id="quizImg" class="col-sm-10" src="../static/mock.jpg"/>
 			<span id="totalLabel" class="col-sm-1"> Пройдено: 0</span>
 		</div>
 
@@ -29,9 +36,10 @@
 			<button onclick="window.check_answer(5);" class="btn-lg btn-info col-sm-3 ml-2 mr-2 mt-3"> Удивление </button>
 		</div>
 		<div class="row eq-height justify-content-md-center">
-			<div class="col-sm-3 ml-2 mr-2"> </div>
 			<button onclick="window.check_answer(6);" class="btn-lg btn-info col-sm-3 ml-2 mr-2 mt-3"> Спокойствие </button>
-			<button onclick="window.finish_quiz();" id="exit_btn" class="btn-lg btn-warning col-sm-3 ml-2 mr-2 mt-3"> Закончить </button>
+		</div>
+		<div class="row eq-height justify-content-md-center">
+			<button onclick="window.finish_quiz();" id="exit_btn" class="btn-lg btn-warning col-sm-9 ml-2 mr-2 mt-3 mb-3"> Закончить </button>
 		</div>
 	</div>
 	<script>
@@ -58,7 +66,7 @@
 				window.score += 1;
 			}
 
-			answers.push([window.quizImage, window.goodAnsw, window.answ]);
+			answers.push([window.quizImage, window.goodAnsw, answ]);
 
 			if (images.length == 0){
 				$.ajax({
@@ -92,15 +100,64 @@
 			$("#total_good").text(`Верных ответов: ${window.score}`);
 			$("#total_bad").text(`Неверных ответов: ${window.total-window.score}`);
 
-			$("#quiz_row").css("display", "none");
-			$("#result_row").css("display", "block");
-			$("#start_btn_row").css("display", "block");
+			window.draw_result();
+
+			$("#quiz_row").hide();
+			$("#result_row").show();
+			$("#start_btn_row").show();
+		}
+
+		function draw_result(){
+			var answersByEmotions = []
+			for (var i=0; i<7; i++){
+				answersByEmotions[i] = [0, 0];
+			}
+
+			for (var answ of window.answers){
+				answersByEmotions[answ[1]][0] += 1;
+				answersByEmotions[answ[1]][1] += answ[1] == answ[2] ? 1:0;
+			}
+
+
+			var trace1 = {
+				x: ['Злость', 'Отвращение', 'Испуг', 'Счастье', 'Грусть', 'Удивление', 'Спокойствие'],
+				y: [answersByEmotions[0][1],
+					answersByEmotions[1][1],
+					answersByEmotions[2][1],
+					answersByEmotions[3][1],
+					answersByEmotions[4][1],
+					answersByEmotions[5][1],
+					answersByEmotions[6][1]],
+				name: 'Верные ответы',
+				marker: { color: '#00cd00'},
+				type: 'bar'
+			};
+
+			var trace2 = {
+				x: ['Злость', 'Отвращение', 'Испуг', 'Счастье', 'Грусть', 'Удивление', 'Спокойствие'],
+				y: [answersByEmotions[0][0] - answersByEmotions[0][1],
+					answersByEmotions[1][0] - answersByEmotions[1][1],
+					answersByEmotions[2][0] - answersByEmotions[2][1],
+					answersByEmotions[3][0] - answersByEmotions[3][1],
+					answersByEmotions[4][0] - answersByEmotions[4][1],
+					answersByEmotions[5][0] - answersByEmotions[5][1],
+					answersByEmotions[6][0] - answersByEmotions[6][1]],
+				marker: { color: '#BC0F0F'},
+				name: 'Неверные ответы',
+				type: 'bar'
+			};
+
+			var data = [trace1, trace2];
+
+			var layout = {barmode: 'stack'};
+
+			Plotly.newPlot('result_plots', data, layout);
 		}
 	</script>
 
 	<script>
 		$(document).ready(function() {
-			$("#start_btn_row").css("display", "block");
+			$("#start_btn_row").show();
 
 			$("#start_btn").on("click", function(event) {
 				$.ajax({
@@ -114,8 +171,8 @@
 		        	window.update_quiz();
 		        }});
 
-				$("#result_row").css("display", "none");
-				$("#quiz_row").css("display", "block");
+				$("#result_row").hide();
+				$("#quiz_row").show();
 		    });
 		});
 	</script>
