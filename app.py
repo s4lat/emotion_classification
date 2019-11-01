@@ -79,8 +79,11 @@ def choose_face():
 	global tracker, tracker_initiated, gray, faces, lock
 
 	if not tracker_initiated:
-		mX, mY = int(request.args.get("x")), int(request.args.get("y"))
-		iW, iH = int(request.args.get("w")), int(request.args.get("h"))
+		try:
+			mX, mY = int(request.args.get("x")), int(request.args.get("y"))
+			iW, iH = int(request.args.get("w")), int(request.args.get("h"))
+		except Exception:
+			return "bad_arguments"
 
 		scale_x = cfg.IN_WIDTH / iW
 		scale_y = cfg.IN_HEIGHT / iH
