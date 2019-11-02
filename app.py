@@ -1,19 +1,16 @@
-from flask import Flask, Response, render_template, request, jsonify
+from flask import Flask, Response, render_template, redirect
+from flask import request, jsonify, make_response, url_for
 import threading, argparse, datetime, imutils, cv2, time, cfg, os
 from keras.preprocessing.image import img_to_array
 from socket import gethostbyname, gethostname
 from PIL import ImageFont, ImageDraw, Image
 from imutils.video import VideoStream, FPS
 from keras.models import load_model
-from keras import backend as K
 from gevent.pywsgi import WSGIServer
 from utils import *
 import numpy as np
 
 lock = threading.Lock()
-
-def swish_activation(x):
-	return (K.sigmoid(x) * x)
 
 face_detector = cv2.CascadeClassifier(cfg.FRONTAL_FACE_DETECTOR)
 
@@ -36,19 +33,38 @@ tracker = None
 gray = None
 
 app = Flask(__name__)
+PIN = generatePIN(6);
+print(("PIN: " + PIN + "\n") * 10)
 
 vs = VideoStream(src=0).start()
 
+@app.route("/auth", methods=['GET', 'POST'])
+def auth():
+	if request.method == "GET":
+		return render_template("auth.html")
+
+	
+	pin = request.form.get("pin")
+	if PIN == pin:
+		resp = make_response(redirect(url_for("detect")))
+		resp.set_cookie("PIN", pin);
+		return resp
+	else:
+		return render_template("auth.html")
+
 @app.route("/")
 @app.route("/detect")
-def index():
+@auth_required(PIN)
+def detect():
 	return render_template("detect.html")
 
 @app.route("/quiz")
+@auth_required(PIN)
 def quiz():
 	return render_template("quiz.html")
 
 @app.route("/get_image_list")
+@auth_required(PIN)
 def get_image_list():
 	images = os.listdir(cfg.QUIZ_IMAGES_PATH)
 
@@ -59,6 +75,7 @@ def get_image_list():
 	return jsonify(images)
 
 @app.route("/get_emotions", methods=["GET"])
+@auth_required(PIN)
 def get_emotions():
 	global tracker_initiated
 
@@ -70,11 +87,13 @@ def get_emotions():
 			return jsonify([])
 
 @app.route("/video_feed")
+@auth_required(PIN)
 def video_feed():
 	return Response(generate(),
 		mimetype = "multipart/x-mixed-replace; boundary=frame")
 
 @app.route("/choose_face", methods=["GET"])
+@auth_required(PIN)
 def choose_face():
 	global tracker, tracker_initiated, gray, faces, lock
 
@@ -102,6 +121,7 @@ def choose_face():
 	return '1'
 
 @app.route("/reset_face")
+@auth_required(PIN)
 def reset_face():
 	global tracker_initiated, emotions
 

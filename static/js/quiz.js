@@ -60,6 +60,7 @@ function finish_quiz(){
 
 	window.draw_result();
 
+	$("#answers_list").slideUp();
 	$("#quiz_row").hide();
 	$("#result_row").show();
 	$("#start_btn_row").show();
@@ -113,23 +114,21 @@ function draw_result(){
 
 	Plotly.newPlot('result_plots', data, layout, {responsive: true});
 
+	//Drawing answers history
 	let answers_list = document.getElementById("answers_list")
 
+	//Deleting previous_answers
 	let previous_answs = answers_list.children
-
-	while(previous_answs[2]) {
-		previous_answs[2].parentNode.removeChild(previous_answs[1]);
+	while(previous_answs[1]) {
+		previous_answs[1].parentNode.removeChild(previous_answs[1]);
 	};
 
 	let answ_template = document.getElementById("answ_row_template");
-
-	// window.total += window.total % 3;
 
 	let rows_n = Math.floor(window.total / 2);
 	let cols_n = 2
 
 	window.total % cols_n ? rows_n++:null;
-	// console.log("ROWS_N ", rows_n)
 
 	for (let i=0; i < rows_n; i++){
 		let row = answ_template.cloneNode(true);

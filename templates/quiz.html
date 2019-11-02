@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 
 {% block container %}
-  	<script src="../static/plotly.min.js"> </script>
-	<script src="../static/quiz.js"></script>
+  	<script src="../static/js/plotly.min.js"> </script>
+	<script src="../static/js/quiz.js"></script>
 
 	
 	<div id="result_row">
@@ -17,14 +17,15 @@
 			</div>
 		</div>
 		<div class="row justify-content-md-center">
-			<p class="col-sm" align="center"> История ответов </p>
+			<p class="col-sm" align="center"> 
+				<b>История ответов</b>
+				<button id="answers_slide"> slide </button>
+			</p>
 		</div>
 
 		<div class="row">
-			<div class="col-sm dropdown">
-				<div id="answers_list" class="dropdown" style="background-color: #f5f5f5;">
-					<a id="tLabel" class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false" data-target="#answers_list"></a>
-
+			<div class="col-sm">
+				<div id="answers_list" style="background-color: #f5f5f5;">
 					<div id="answ_row_template" class="row justify-content-md-center mt-3 d-none">
 						<div class="col-sm-5 mr-2 ml-2 mt-2 mb-2">
 							<p align="center"> Вопрос #1</p>
@@ -74,6 +75,8 @@
 	</div>
 	<script>
 		$(document).ready(function() {
+			$("#answers_list").slideUp();
+
 			$("#start_btn_row").show();
 
 			$("#start_btn").on("click", function(event) {
@@ -90,6 +93,14 @@
 
 				$("#result_row").hide();
 				$("#quiz_row").show();
+		    });
+
+		    $("#answers_slide").on("click", function(event){
+		    	if ($("#answers_list").first().is(":hidden")){
+		    		$("#answers_list").slideDown();
+		    	} else {
+		    		$("#answers_list").slideUp();
+		    	}
 		    });
 		});
 	</script>
