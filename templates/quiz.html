@@ -19,7 +19,7 @@
 		<div class="row justify-content-md-center">
 			<p class="col-sm" align="center"> 
 				<b>История ответов</b>
-				<button id="answers_slide"> slide </button>
+				<button id="answers_slide" class="btn btn-warning ml-2"> Показать </button>
 			</p>
 		</div>
 
@@ -98,8 +98,10 @@
 		    $("#answers_slide").on("click", function(event){
 		    	if ($("#answers_list").first().is(":hidden")){
 		    		$("#answers_list").slideDown();
+		    		$("#answers_slide").text("Скрыть");
 		    	} else {
 		    		$("#answers_list").slideUp();
+		    		$("#answers_slide").text("Показать");
 		    	}
 		    });
 		});

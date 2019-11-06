@@ -1,6 +1,6 @@
 import cv2, os
 
-PREFFERED_THEME = 'cleanlooks' #Предпочитаемая тема
+SECRET_KEY = b'=2\xbe\xdf\r\xab\x88\x98\x83\x02\x97\xa0\xc9/eo'
 
 IN_WIDTH, IN_HEIGHT = 426, 240
 OUT_WIDTH, OUT_HEIGHT = 640, 360
@@ -12,7 +12,6 @@ NOT_SELECTED_COLOR = (0, 255, 0)[::-1] #RGB to BGR
 SELECTED_COLOR = (255, 140, 0)[::-1]
 
 SCRIPT_PATH = os.path.dirname(os.path.realpath(__file__)) #Полный путь к данному скрипту
-
 
 QUIZ_IMAGES_PATH = SCRIPT_PATH+'/static/quiz/' #Путь к изображениям викторины
 FONT_PATH = SCRIPT_PATH+"/static/helvetica.ttf" #Путь к шрифту для Pillow
@@ -50,10 +49,4 @@ fontScale              = 0.8
 fontColor              = (255, 255, 255)[::-1]
 bgColor                = (255, 0, 0)[::-1]
 lineType               = cv2.LINE_AA
-
-#Текст для лейблов в викторине
-TOP_BAD_LABEL = '<html><head/><body><p align="center"><span style=" font-size:18pt;">Ответ </span><span style=" font-size:18pt; color:#ff0000;">%s</span><span style=" font-size:18pt;"> - неверен, правильный ответ - </span><span style=" font-size:18pt; color:#00dc00;">%s</span></p></body></html>'
-TOP_GOOD_LABEL = '<html><head/><body><p align="center"><span style=" font-size:18pt;">Верно! </span><span style=" font-size:18pt; color:#00dc00;">%s</span><span style=" font-size:18pt;"> - правильный ответ</span></p></body></html>'
-TOP_NEUTRAL_LABEL = '<html><head/><body><p align=\"center\"><span style=\" font-size:18pt;\">Какую эмоцию выражает лицо человека на изображении?</span></p></body></html>'
-QUIZ_SCORE_LABEL = '<html><head/><body><p align=\"center\"><span style=\" font-size:28pt; color:#00dc00; vertical-align:sub;\">✓:%s</span></p><p align=\"center\"><span style=\" font-size:28pt; color:#ff0000; vertical-align:sub;\">✗:%s</span></p><p align=\"center\"><span style=\" font-size:28pt; color:#000000; vertical-align:sub;\">O:%s</span></p></body></html>'
 

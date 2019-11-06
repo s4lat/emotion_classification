@@ -16,9 +16,7 @@ def auth_required(PIN):
                 return redirect(url_for("auth"))
 
             return f(*args, **kwargs)
-
         return wrap
-
     return decorator
 
 #Рисование рамки со скругленными уголками
