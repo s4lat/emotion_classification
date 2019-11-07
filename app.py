@@ -9,6 +9,7 @@ from keras.models import load_model
 from gevent.pywsgi import WSGIServer
 from utils import *
 import numpy as np
+import logging
 
 lock = threading.Lock()
 
@@ -36,8 +37,6 @@ app = Flask(__name__)
 PIN = generatePIN(6);
 print(("PIN: " + PIN + "\n") * 10)
 
-vs = VideoStream(src=0).start()
-
 @app.route("/auth", methods=['GET', 'POST'])
 def auth():
 	if request.method == "GET":
@@ -49,6 +48,7 @@ def auth():
 		resp.set_cookie("PIN", pin);
 		return resp
 	else:
+		app.logger.warning("[WARNING] Bad auth from: %s" % request.remote_addr)
 		return render_template("auth.html")
 
 @app.route("/")
@@ -71,24 +71,24 @@ def get_image_list():
 		if img.startswith('.'):
 			images.pop(images.index(img))
 
+	app.logger.info("[INFO][/get_image_list] Sending image list to: %s" % request.remote_addr)
 	return jsonify(images)
 
 @app.route("/get_emotions", methods=["GET"])
 @auth_required(PIN)
 def get_emotions():
 	global tracker_initiated
+	global emotions
 
 	with lock:
-		if tracker_initiated:
-			global emotions
-			return jsonify(emotions)
-		else:
-			return jsonify([])
+		return jsonify(emotions)
 
 @app.route("/video_feed")
 @auth_required(PIN)
 def video_feed():
-	return Response(generate(),
+	app.logger.info("[INFO][/video_feed] Starting video stream for: %s" % request.remote_addr)
+
+	return Response(generate(request.remote_addr),
 		mimetype = "multipart/x-mixed-replace; boundary=frame")
 
 @app.route("/choose_face", methods=["GET"])
@@ -117,8 +117,8 @@ def choose_face():
 					tracker.init(gray, face_bb)
 					tracker_initiated = True
 
+				app.logger.info("[INFO] Face choosed by: %s" % request.remote_addr)
 		
-
 	return '1'
 
 @app.route("/reset_face")
@@ -130,14 +130,16 @@ def reset_face():
 		tracker_initiated = False
 		emotions = []
 
+	app.logger.info("[INFO] Face reseted by: %s" % request.remote_addr)
 
 	return '1'
 
 def detect_emotion():
-	print("thread started")
-	global vs, outputFrame, tracker
+	global outputFrame, tracker
 	global faces, gray, tracker_initiated
 	global emotions
+
+	vs = VideoStream(src=0).start()
 
 	fps = FPS().start()
 	CURRENT_FPS = 0
@@ -145,6 +147,8 @@ def detect_emotion():
 
 	scale_x = config.SCALE_WIDTH
 	scale_y = config.SCALE_HEIGHT
+
+	app.logger.info("[INFO] detect_emotion thread started")
 
 	while True:
 		try:
@@ -196,7 +200,6 @@ def detect_emotion():
 					with lock:
 						tracker_initiated = False
 						emotions = []
-				
 			else:
 				with lock:
 					faces = face_detector.detectMultiScale(gray)
@@ -227,11 +230,10 @@ def detect_emotion():
 
 			frame_ind += 1
 		except Exception as e:
+			app.logger.error("[ERROR] Error in detect_emotion(): \n\t%s" % e)
 			continue
-		finally:
-			time.sleep(0.01)
 
-def generate():
+def generate(addr):
 	global outputFrame
 
 	try:
@@ -247,20 +249,28 @@ def generate():
 
 			yield(b'--frame\r\n' 
 				b'Content-Type: image/jpeg\r\n\r\n' + bytearray(encodedImage) + b'\r\n')
-			time.sleep(0.01)
 
 	except GeneratorExit:
-		return '1'
+		app.logger.info("[INFO] Stream stopped for: %s" % addr)
 
+	except Exception as e:
+		app.logger.error(["[ERROR] Error in generate(): \n\t%s"] % e)
 
-
-if __name__ == "__main__":
+@app.before_first_request
+def startDetectionThread():
 	t1 = threading.Thread(target=detect_emotion)
 	t1.daemon = True
 	t1.start()
-	
+
+import logging
+
+app.logger.setLevel(logging.DEBUG)
+handler = logging.FileHandler('app.log')
+handler.setLevel(logging.DEBUG)
+app.logger.addHandler(handler)
+
+if __name__ == "__main__":
+
 	app.run('0.0.0.0', '80', debug=False, 
 		threaded=True, use_reloader=False)
-
-vs.stop()
 
