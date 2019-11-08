@@ -80,8 +80,8 @@ def get_emotions():
 	global tracker_initiated
 	global emotions
 
-	with lock:
-		return jsonify(emotions)
+	return jsonify({"emotions" : emotions, "tracker" : tracker_initiated})
+
 
 @app.route("/video_feed")
 @auth_required(PIN)

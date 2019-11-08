@@ -75,33 +75,33 @@
 		        success : function(data){
 		        	var bars =document.getElementsByClassName("progress");
 
-		        	if (data.length > 0){
+		        	if (data["tracker"]){
 		        		//Злость
-		        		bars[0].children[0].style.width = `${data[0]}%`;
-		        		bars[0].children[0].textContent = `${data[0]}%`;
+		        		bars[0].children[0].style.width = `${data["emotions"][0]}%`;
+		        		bars[0].children[0].textContent = `${data["emotions"][0]}%`;
 		        		//Счастье
-		        		bars[1].children[0].style.width = `${data[3]}%`;
-		        		bars[1].children[0].textContent = `${data[3]}%`;
+		        		bars[1].children[0].style.width = `${data["emotions"][3]}%`;
+		        		bars[1].children[0].textContent = `${data["emotions"][3]}%`;
 		        		//Удивление
-		        		bars[2].children[0].style.width = `${data[5]}%`;
-		        		bars[2].children[0].textContent = `${data[5]}%`;
+		        		bars[2].children[0].style.width = `${data["emotions"][5]}%`;
+		        		bars[2].children[0].textContent = `${data["emotions"][5]}%`;
 		        		//Спокойствие
-		        		bars[3].children[0].style.width = `${data[6]}%`;
-		        		bars[3].children[0].textContent = `${data[6]}%`;
+		        		bars[3].children[0].style.width = `${data["emotions"][6]}%`;
+		        		bars[3].children[0].textContent = `${data["emotions"][6]}%`;
 		        		//Грусть
-		        		bars[4].children[0].style.width = `${data[4]}%`;
-		        		bars[4].children[0].textContent = `${data[4]}%`;
+		        		bars[4].children[0].style.width = `${data["emotions"][4]}%`;
+		        		bars[4].children[0].textContent = `${data["emotions"][4]}%`;
 		        		//Испуг
-		        		bars[5].children[0].style.width = `${data[2]}%`;
-		        		bars[5].children[0].textContent = `${data[2]}%`;
+		        		bars[5].children[0].style.width = `${data["emotions"][2]}%`;
+		        		bars[5].children[0].textContent = `${data["emotions"][2]}%`;
 		        		//Удивление
-		        		bars[6].children[0].style.width = `${data[1]}%`;
-		        		bars[6].children[0].textContent = `${data[1]}%`;
+		        		bars[6].children[0].style.width = `${data["emotions"][1]}%`;
+		        		bars[6].children[0].textContent = `${data["emotions"][1]}%`;
 
 		        	} else {
 		        		for (var i=0; i<7; i++){
 		        			bars[i].children[0].style.width = "100%";
-		        			bars[i].children[0].textContent = "100%";
+		        			bars[i].children[0].textContent = "";
 		        		}
 		        	}
 		        },
