@@ -58,7 +58,7 @@ class QuizWidget(QWidget):
 
     #Обновление лейбла счета и лейбла вопроса/правильного/неправльного ответа, вкл/выкл кнопок ответа
     def updateLabels(self, emotion=None):
-        if emotion:
+        if emotion != None:
             if self.correct:
                 self.qLabel.setText(self.cfg.TOP_GOOD_LABEL % self.cfg.EMOTIONS_RUS[emotion])
             else:
