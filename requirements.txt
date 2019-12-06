@@ -1,6 +1,7 @@
-dlib
-Pillow
-imutils
-numpy
-Keras
-opencv_contrib_python
+imutils==0.5.3
+numpy==1.16.0
+gevent==1.4.0
+Flask==1.0.2
+Keras==2.2.4
+Pillow==6.2.1
+gunicorn
