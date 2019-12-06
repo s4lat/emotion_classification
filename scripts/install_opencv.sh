@@ -13,7 +13,7 @@ cd build
 sed -i 's/CONF_SWAPSIZE=100/CONF_SWAPSIZE=1024/g' /etc/dphys-swapfile
 /etc/init.d/dphys-swapfile restart
 
-python3 -m pip install numpy
+python3 -m pip install numpy==1.16.0
 
 cmake -D CMAKE_BUILD_TYPE=RELEASE \
     -D CMAKE_INSTALL_PREFIX=/usr/local \
