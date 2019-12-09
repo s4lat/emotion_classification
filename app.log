@@ -1,0 +1,19 @@
+[INFO] detect_emotion thread started
+[INFO][/video_feed] Starting video stream for: 127.0.0.1
+[INFO][/video_feed] Starting video stream for: 127.0.0.1
+[INFO] Face choosed by: 127.0.0.1
+[INFO] Face choosed by: 127.0.0.1
+[INFO] Stream stopped for: 127.0.0.1
+[INFO][/get_image_list] Sending image list to: 127.0.0.1
+[INFO][/get_image_list] Sending image list to: 127.0.0.1
+[INFO] detect_emotion thread started
+[INFO][/video_feed] Starting video stream for: 127.0.0.1
+[INFO][/video_feed] Starting video stream for: 127.0.0.1
+[INFO] Face choosed by: 127.0.0.1
+[INFO] Face reseted by: 127.0.0.1
+[INFO] Stream stopped for: 127.0.0.1
+[INFO][/video_feed] Starting video stream for: 127.0.0.1
+[INFO][/video_feed] Starting video stream for: 127.0.0.1
+[INFO] Stream stopped for: 127.0.0.1
+[INFO] Stream stopped for: 127.0.0.1
+[INFO] Stream stopped for: 127.0.0.1

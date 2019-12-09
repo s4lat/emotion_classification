@@ -5,7 +5,7 @@
 # Created by: PyQt5 UI code generator 5.12.1
 #
 # WARNING! All changes made in this file will be lost!
-from keras.preprocessing.image import img_to_array
+from tensorflow.keras.preprocessing.image import img_to_array
 from imutils.face_utils.helpers import rect_to_bb
 from PIL import ImageFont, ImageDraw, Image
 from imutils.video import VideoStream, FPS
@@ -98,7 +98,7 @@ class DetectWidget(QWidget):
     def grab(self, cam, queue):
         try:
             cap = VideoStream(src=0).start()
-            input_shape = self.emotion_classifier.layers[0].input_shape[1:3]
+            input_shape = self.emotion_classifier.layers[0].input_shape[0][1:3]
 
             self.tracker_initiated = False
 
@@ -194,7 +194,7 @@ class DetectWidget(QWidget):
 
                     queue.put(result)
         except Exception as e:
-            print(e)
+            raise e
             
         finally:
             cap.stop()
