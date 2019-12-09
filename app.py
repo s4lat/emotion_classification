@@ -1,11 +1,11 @@
 from flask import Flask, Response, render_template, redirect
 from flask import request, jsonify, make_response, url_for
 import threading, argparse, datetime, imutils, cv2, time, config, os
-from keras.preprocessing.image import img_to_array
+from tensorflow.keras.preprocessing.image import img_to_array
 from socket import gethostbyname, gethostname
 from PIL import ImageFont, ImageDraw, Image
 from imutils.video import VideoStream, FPS
-from keras.models import load_model
+from tensorflow.keras.models import load_model
 from gevent.pywsgi import WSGIServer
 from utils import *
 import numpy as np
@@ -20,7 +20,7 @@ emotion_classifier = load_model(emotion_model_path,
 	custom_objects={"swish_activation": swish_activation}, compile=False)
 emotion_classifier._make_predict_function()
 
-input_shape = emotion_classifier.layers[0].input_shape[1:3]
+input_shape = emotion_classifier.layers[0].input_shape[0][1:3]
 
 fontpath = config.FONT_PATH
 font = ImageFont.truetype(fontpath, 32)
