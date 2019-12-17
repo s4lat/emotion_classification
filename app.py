@@ -20,10 +20,10 @@ emotion_classifier = load_model(emotion_model_path,
 	custom_objects={"swish_activation": swish_activation}, compile=False)
 emotion_classifier._make_predict_function()
 
-input_shape = emotion_classifier.layers[0].input_shape[0][1:3]
+input_shape = emotion_classifier.layers[0].input_shape[0][1:3] #Getting input shape
 
 fontpath = config.FONT_PATH
-font = ImageFont.truetype(fontpath, 32)
+font = ImageFont.truetype(fontpath, 32) #Setting font
 
 outputFrame = None
 
@@ -34,9 +34,10 @@ tracker = None
 gray = None
 
 app = Flask(__name__)
-PIN = generatePIN(6);
+PIN = generatePIN(6) #Generating PIN for auth
 print(("PIN: " + PIN + "\n") * 10)
 
+#Auth route
 @app.route("/auth", methods=['GET', 'POST'])
 def auth():
 	if request.method == "GET":
@@ -45,10 +46,10 @@ def auth():
 	pin = request.form.get("pin")
 	if PIN == pin:
 		resp = make_response(redirect(url_for("detect")))
-		resp.set_cookie("PIN", pin);
+		resp.set_cookie("PIN", pin) #Setting cookie with valid PIN
 		return resp
 	else:
-		app.logger.warning("[WARNING] Bad auth from: %s" % request.remote_addr)
+		app.logger.warning("[WARNING] Bad auth from: %s" % request.remote_addr) #Loggin bad auth
 		return render_template("auth.html")
 
 @app.route("/")
@@ -62,6 +63,7 @@ def detect():
 def quiz():
 	return render_template("quiz.html")
 
+#Return image list from 'static/quiz' folder
 @app.route("/get_image_list")
 @auth_required(PIN)
 def get_image_list():
@@ -74,6 +76,7 @@ def get_image_list():
 	app.logger.info("[INFO][/get_image_list] Sending image list to: %s" % request.remote_addr)
 	return jsonify(images)
 
+#Return emotion probs of current frame
 @app.route("/get_emotions", methods=["GET"])
 @auth_required(PIN)
 def get_emotions():
@@ -83,6 +86,7 @@ def get_emotions():
 	return jsonify({"emotions" : emotions, "tracker" : tracker_initiated})
 
 
+#Starting video stream
 @app.route("/video_feed")
 @auth_required(PIN)
 def video_feed():
@@ -103,17 +107,17 @@ def choose_face():
 		except Exception:
 			return "bad_arguments"
 
-		scale_x = config.IN_WIDTH / iW
+		scale_x = config.IN_WIDTH / iW        #Calculating scales for converting browser mouse XY to frame XY
 		scale_y = config.IN_HEIGHT / iH
 
-		mX *= scale_x
+		mX *= scale_x	#Converting mouse XY to frame XY
 		mY *= scale_y
 
 		for x, y, w, h in faces:
 			if (x <= mX <= x+w) and (y <= mY <= y+h):
 				face_bb = (x, y, w, h)
 				with lock:
-					tracker = cv2.TrackerMOSSE_create()
+					tracker = cv2.TrackerMOSSE_create() 	#Starting tracker
 					tracker.init(gray, face_bb)
 					tracker_initiated = True
 
@@ -134,6 +138,7 @@ def reset_face():
 
 	return '1'
 
+#Thread function for emotion detection
 def detect_emotion():
 	global outputFrame, tracker
 	global faces, gray, tracker_initiated
@@ -159,11 +164,11 @@ def detect_emotion():
 				gray = cv2.resize(out_frame, (config.IN_WIDTH, config.IN_HEIGHT))
 				gray = cv2.cvtColor(gray, cv2.COLOR_BGR2GRAY)
 
-			if tracker_initiated:
+			if tracker_initiated:	#If tracker initiated then update tracker
 				with lock:
 					success, box = tracker.update(gray)
 
-				if success:
+				if success:			#If face finded then calculate emotion and draw
 					x, y, w, h = [int(i) for i in box]
 
 					x = 0 if x < 0 else (config.IN_WIDTH-1 if x > config.IN_WIDTH-1 else x)
@@ -175,7 +180,7 @@ def detect_emotion():
 					roi = cv2.resize(roi, input_shape, interpolation=cv2.INTER_AREA)
 					roi = roi.astype("float") / 255.0
 					roi = img_to_array(roi)
-					roi = np.expand_dims(roi, axis=0)
+					roi = np.expand_dims(roi, axis=0)	#[roi,]
 					preds = emotion_classifier.predict(roi)[0]
 
 					with lock:
@@ -196,11 +201,11 @@ def detect_emotion():
 					draw.text((x, y+h),  config.EMOTIONS_RUS[emotion], font = font, fill = (255, 255, 255, 255))
 
 					out_frame = np.array(out_frame)
-				else:
+				else:		#Face not finded, tracker resets
 					with lock:
 						tracker_initiated = False
 						emotions = []
-			else:
+			else:			#Tracker not initiated, detecting faces
 				with lock:
 					faces = face_detector.detectMultiScale(gray)
 
@@ -218,6 +223,7 @@ def detect_emotion():
 
 			fps.update()
 
+			#Updating fps every 10 frames
 			if (frame_ind == 10):
 				fps.stop()
 
@@ -233,6 +239,7 @@ def detect_emotion():
 			app.logger.error("[ERROR] Error in detect_emotion(): \n\t%s" % e)
 			continue
 
+#Video stream generator function
 def generate(addr):
 	global outputFrame
 

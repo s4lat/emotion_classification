@@ -5,6 +5,7 @@ import random as rand
 import string as s
 import cv2
 
+#Auth required decorator for routes in Flask app
 def auth_required(PIN):
     def decorator(f):
         @wraps(f)
