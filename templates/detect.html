@@ -33,6 +33,17 @@
 			<div class="progress" style="margin-bottom: 25px;">
 				<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;background-color: #650297;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"> 0% </div>
 			</div>
+			<span class="progress-label"> Пульс(Уд/мин) </span>
+			<div class="progress">
+				<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;background-color: #FFCD00;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="200"> 0% </div>
+			</div>
+			<span id='avg_pulse'>Нормальный пульс: Не откалиброван</span><br>
+
+			<span class="progress-label"> Отклонение пульса: </span>
+			<div class="progress">
+				<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;background-color: #FFCD00;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"> 0% </div>
+			</div>
+
 		</div>
 	</div>
 
@@ -47,6 +58,36 @@
 	<div class="row">
 		<div class="col-sm-4 top15">
 			<input class="btn-lg btn-warning" value="Выбрать другое лицо" onclick="resetFace();" type="button">
+		</div>
+	</div>
+
+	<script>
+    	function start_calibrate(){
+    		xhttp.open("GET", "start_calibrate");
+    		xhttp.send();
+    		let lab = document.getElementById("avg_pulse");
+    		lab.textContent = "Нормальный пульс: Калибруем..."
+    	};
+    </script>
+
+	<div class="row">
+		<div class="col-sm-4 top15">
+			<input class="btn-lg btn-warning" value="Калибровать пульс" onclick="start_calibrate();" type="button">
+		</div>
+	</div>
+
+	<script>
+    	function stop_calibrate(){
+    		xhttp.open("GET", "stop_calibrate");
+    		xhttp.send();
+    		let lab = document.getElementById("avg_pulse");
+    		lab.textContent = "Нормальный пульс: Заканчиваем..."
+    	};
+    </script>
+
+	<div class="row">
+		<div class="col-sm-4 top15">
+			<input class="btn-lg btn-warning" value="Остановить калибровку пульса" onclick="stop_calibrate();" type="button">
 		</div>
 	</div>
 	</div>
@@ -68,7 +109,7 @@
 
     <script>
     	$(document).ready(
-    		function update() {
+    		function update_emotions() {
 		    $.ajax({
 		        type : 'GET',
 		        url : 'get_emotions',
@@ -106,8 +147,29 @@
 		        	}
 		        },
 		    }).then(function() {
-		       setTimeout(update, 500);
+		       setTimeout(update_emotions, 750);
 		    });
 		}); 
+		$(document).ready(
+			function update_pulse(){
+				$.ajax({
+			        type : 'GET',
+			        url : 'get_vars',
+			        success : function(data){
+			        	var bars =document.getElementsByClassName("progress");
+			        	if (data[1] != 0){
+			        		let lab = document.getElementById("avg_pulse");
+    						lab.textContent = `Нормальный пульс: ${data[1]} Уд/мин`
+			        	}
+		        		bars[7].children[0].style.width = `${data[0]/200*100}%`;
+		        		bars[7].children[0].textContent = `${data[0]}`;
+
+		        		bars[8].children[0].style.width = `${Math.abs(data[1]-data[0])}%`;
+		        		bars[8].children[0].textContent = `${data[1]-data[0]}`;
+			        },
+			    }).then(function() {
+			       setTimeout(update_pulse, 2500);
+			    });
+			})
     </script>
 {% endblock %}

@@ -18,25 +18,25 @@ FONT_PATH = SCRIPT_PATH+"/static/helvetica.ttf" #Путь к шрифту для
 
 #Словарь всех сетей с путем к их весам
 MODELS = { 'tiny_x' : SCRIPT_PATH+'/static/models/tiny_exception_0.60_48.hdf5',
- 			'mini_x' : SCRIPT_PATH+'/static/models/mini_exception_0.00_64.hdf5',
- 			'big_x' : SCRIPT_PATH+'/static/models/big_exception_0.66_48.hdf5',
- 			'simpler_cnn' : SCRIPT_PATH+'/static/models/simpler_cnn_62_48.hdf5',
- 			'simple_cnn' : SCRIPT_PATH+'/static/models/simple_cnn_0.60_48.hdf5',
- 			'swish' : SCRIPT_PATH+'/static/models/swish_model.52-0.91.hdf5'
- 		}
+            'mini_x' : SCRIPT_PATH+'/static/models/mini_exception_0.00_64.hdf5',
+            'big_x' : SCRIPT_PATH+'/static/models/big_exception_0.66_48.hdf5',
+            'simpler_cnn' : SCRIPT_PATH+'/static/models/simpler_cnn_62_48.hdf5',
+            'simple_cnn' : SCRIPT_PATH+'/static/models/simple_cnn_0.60_48.hdf5',
+            'swish' : SCRIPT_PATH+'/static/models/swish_model.52-0.91.hdf5'
+        }
 
 CURR_MODEL = 'big_x' #Использующаяся нейросеть
 FRONTAL_FACE_DETECTOR = SCRIPT_PATH+'/static/models/haarcascade_frontalface_default.xml' #Путь к детектору лиц
 
 #Конвертер названия кнопки в индекс
 BUTTON_TO_EMOTION = {
-	'angryBtn' : 0,
-	'disgustBtn' : 1,
-	'scaredBtn' : 2,
-	'happyBtn' : 3,
-	'sadBtn' : 4,
-	'surprisedBtn' : 5,
-	'neutralBtn' : 6,
+    'angryBtn' : 0,
+    'disgustBtn' : 1,
+    'scaredBtn' : 2,
+    'happyBtn' : 3,
+    'sadBtn' : 4,
+    'surprisedBtn' : 5,
+    'neutralBtn' : 6,
 }
 
 EMOTIONS = ["angry" ,"disgust","scared", "happy", "sad", "surprised",
