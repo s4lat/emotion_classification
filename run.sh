@@ -1,0 +1,1 @@
+gunicorn app:app -w 1 --threads 12 -b 0.0.0.0:80 --timeout 180

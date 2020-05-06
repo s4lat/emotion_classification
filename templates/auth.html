@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block container %}
+
+<div class="row justify-content-md-center mt-3">
+		<div class="col-sm-3">
+			<p align="center"> Введите код доступа: </p>
+		</div>
+	</div>
+<form method="POST" href="/auth">
+	<div class="row justify-content-md-center">
+		<div class="col-sm-3">
+			<input placeholder="1337228" class="form-control" name="pin" type="password"/>
+		</div>
+	</div>
+	<div class="row justify-content-md-center mt-3">
+		<div class="col-sm-6" align="center">
+			<input style="min-width: 150px;" class="btn btn-warning" type="submit"/ value="Войти">
+		</div>
+	</div>
+</form>
+{% endblock %}
+
+</html>

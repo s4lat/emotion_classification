@@ -1,0 +1,59 @@
+#predictions
+{
+	text-align: center;
+}
+.top15
+{
+	margin-top: 15px;
+}
+.top10
+{
+	margin-top: 10px;
+}
+
+#quiz_row, #start_btn_row, #result_row
+{
+	display: none;
+}
+
+#answers_list
+{
+	overflow-y: scroll;
+	overflow-x: hidden;
+	height: 500px
+}
+
+@media (min-height: 300px)
+{
+	.progress-label
+	{
+		font-size: 13px;
+	}
+	.progress, .progress-bar
+	{
+		height: 16px;
+		font-size: 16px;
+	}
+
+	#quizImg
+	{
+		height: 200px;
+	}
+}
+
+@media (min-height: 600px)
+{
+	.progress-label
+	{
+		font-size: 16px;
+	}
+	.progress, .progress-bar
+	{
+		height: 30px;
+		font-size: 16px;
+	}
+	#quizImg
+	{
+		height: 450px;
+	}
+}

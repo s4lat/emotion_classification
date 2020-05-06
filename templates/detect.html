@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% block container %}
+    <div class="row eq-height align-items-center">
+			<img id="cam" class="img-fluid col-sm-9" src="{{ url_for('video_feed') }}">
+			<!-- <img id="cam" class="img-fluid col-sm-9" src="../static/mock.jpg"/> -->
+
+	    <div id="predictions" class="col-sm-3">
+	    	<span class="progress-label"> Злость </span>
+			<div class="progress">
+				<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%; background-color: #FD0000;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"> 0% </div>
+			</div>
+			<span class="progress-label"> Счастье </span>
+			<div class="progress">
+				<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;background-color: #FD9900;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"> 0% </div>
+			</div>
+			<span class="progress-label"> Удивление </span>
+			<div class="progress">
+				<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;background-color: #FFCD00;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"> 0% </div>
+			</div>
+			<span class="progress-label"> Спокойствие </span>
+			<div class="progress">
+				<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;background-color: #67CC31;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"> 0% </div>
+			</div>
+			<span class="progress-label"> Грусть </span>
+			<div class="progress">
+				<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;background-color: #3299FE;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"> 0% </div>
+			</div>
+			<span class="progress-label"> Испуг </span>
+			<div class="progress">
+				<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;background-color: #1300CA;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"> 0% </div>
+			</div>
+			<span class="progress-label"> Отвращение </span>
+			<div class="progress" style="margin-bottom: 25px;">
+				<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;background-color: #650297;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"> 0% </div>
+			</div>
+			<span class="progress-label"> Пульс(Уд/мин) </span>
+			<div class="progress">
+				<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;background-color: #FFCD00;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="200"> 0% </div>
+			</div>
+			<span id='avg_pulse'>Нормальный пульс: Не откалиброван</span><br>
+
+			<span class="progress-label"> Отклонение пульса: </span>
+			<div class="progress">
+				<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;background-color: #FFCD00;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"> 0% </div>
+			</div>
+
+		</div>
+	</div>
+
+	<script>
+    	const xhttp = new XMLHttpRequest();
+    	function resetFace(){
+    		xhttp.open("GET", "reset_face");
+    		xhttp.send();
+    	};
+    </script>
+
+	<div class="row">
+		<div class="col-sm-4 top15">
+			<input class="btn-lg btn-warning" value="Выбрать другое лицо" onclick="resetFace();" type="button">
+		</div>
+	</div>
+
+	<script>
+    	function start_calibrate(){
+    		xhttp.open("GET", "start_calibrate");
+    		xhttp.send();
+    		let lab = document.getElementById("avg_pulse");
+    		lab.textContent = "Нормальный пульс: Калибруем..."
+    	};
+    </script>
+
+	<div class="row">
+		<div class="col-sm-4 top15">
+			<input class="btn-lg btn-warning" value="Калибровать пульс" onclick="start_calibrate();" type="button">
+		</div>
+	</div>
+
+	<script>
+    	function stop_calibrate(){
+    		xhttp.open("GET", "stop_calibrate");
+    		xhttp.send();
+    		let lab = document.getElementById("avg_pulse");
+    		lab.textContent = "Нормальный пульс: Заканчиваем..."
+    	};
+    </script>
+
+	<div class="row">
+		<div class="col-sm-4 top15">
+			<input class="btn-lg btn-warning" value="Остановить калибровку пульса" onclick="stop_calibrate();" type="button">
+		</div>
+	</div>
+	</div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> 
+    <script>
+    	$(document).ready(function() {
+		    $("#cam").on("click", function(event) {
+		        var x = event.pageX - this.offsetLeft;
+		        var y = event.pageY - this.offsetTop;
+		        var w = this.width;
+		        var h = this.height;
+
+		        xhttp.open("GET", `choose_face?x=${x}&y=${y}&w=${w}&h=${h}`);
+		        xhttp.send();
+		    });
+		});
+    </script>
+
+    <script>
+    	$(document).ready(
+    		function update_emotions() {
+		    $.ajax({
+		        type : 'GET',
+		        url : 'get_emotions',
+		        success : function(data){
+		        	var bars =document.getElementsByClassName("progress");
+
+		        	if (data["tracker"]){
+		        		//Злость
+		        		bars[0].children[0].style.width = `${data["emotions"][0]}%`;
+		        		bars[0].children[0].textContent = `${data["emotions"][0]}%`;
+		        		//Счастье
+		        		bars[1].children[0].style.width = `${data["emotions"][3]}%`;
+		        		bars[1].children[0].textContent = `${data["emotions"][3]}%`;
+		        		//Удивление
+		        		bars[2].children[0].style.width = `${data["emotions"][5]}%`;
+		        		bars[2].children[0].textContent = `${data["emotions"][5]}%`;
+		        		//Спокойствие
+		        		bars[3].children[0].style.width = `${data["emotions"][6]}%`;
+		        		bars[3].children[0].textContent = `${data["emotions"][6]}%`;
+		        		//Грусть
+		        		bars[4].children[0].style.width = `${data["emotions"][4]}%`;
+		        		bars[4].children[0].textContent = `${data["emotions"][4]}%`;
+		        		//Испуг
+		        		bars[5].children[0].style.width = `${data["emotions"][2]}%`;
+		        		bars[5].children[0].textContent = `${data["emotions"][2]}%`;
+		        		//Удивление
+		        		bars[6].children[0].style.width = `${data["emotions"][1]}%`;
+		        		bars[6].children[0].textContent = `${data["emotions"][1]}%`;
+
+		        	} else {
+		        		for (var i=0; i<7; i++){
+		        			bars[i].children[0].style.width = "100%";
+		        			bars[i].children[0].textContent = "";
+		        		}
+		        	}
+		        },
+		    }).then(function() {
+		       setTimeout(update_emotions, 750);
+		    });
+		}); 
+		$(document).ready(
+			function update_pulse(){
+				$.ajax({
+			        type : 'GET',
+			        url : 'get_vars',
+			        success : function(data){
+			        	var bars =document.getElementsByClassName("progress");
+			        	if (data[1] != 0){
+			        		let lab = document.getElementById("avg_pulse");
+    						lab.textContent = `Нормальный пульс: ${data[1]} Уд/мин`
+			        	}
+		        		bars[7].children[0].style.width = `${data[0]/200*100}%`;
+		        		bars[7].children[0].textContent = `${data[0]}`;
+
+		        		bars[8].children[0].style.width = `${Math.abs(data[1]-data[0])}%`;
+		        		bars[8].children[0].textContent = `${data[1]-data[0]}`;
+			        },
+			    }).then(function() {
+			       setTimeout(update_pulse, 2500);
+			    });
+			})
+    </script>
+{% endblock %}

@@ -1,5 +1,24 @@
+from flask import request, redirect, url_for
+from keras import backend as K
+from functools import wraps
+import random as rand
+import string as s
 import cv2
 
+#Auth required decorator for routes in Flask app
+def auth_required(PIN):
+    def decorator(f):
+        @wraps(f)
+        def wrap(*args, **kwargs):
+            if 'PIN' not in request.cookies:
+                return redirect(url_for("auth"))
+                
+            if PIN != request.cookies['PIN']:
+                return redirect(url_for("auth"))
+
+            return f(*args, **kwargs)
+        return wrap
+    return decorator
 
 #Рисование рамки со скругленными уголками
 def draw_border(img, pt1, pt2, color, thickness, r, d):
@@ -40,3 +59,10 @@ def draw_text_w_background(img, text, coords, font, fontScale, fontColor, bgColo
 	for i, line in enumerate(lines):
 		y = coords[1] + h*i
 		cv2.putText(img, line, (x, y), font, fontScale, fontColor, thickness, cv2.LINE_AA)
+
+def generatePIN(len, alph=s.digits):
+    pin = [rand.choice(alph) for i in range(len)]
+    return ''.join(pin)
+
+def swish_activation(x):
+    return (K.sigmoid(x) * x)
