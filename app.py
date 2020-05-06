@@ -306,10 +306,10 @@ def startDetectionThread():
     cam_thread.start()
 
     #Starting arduino serial thread
-    ard_thread = threading.Thread(target=partial(ardThread, 
-        '/dev/cu.usbmodem143101', 115200, ard_vars, lock))
-    ard_thread.daemon = True
-    ard_thread.start()
+    # ard_thread = threading.Thread(target=partial(ardThread, 
+        # '/dev/cu.usbmodem141201', 115200, ard_vars, lock))
+    # ard_thread.daemon = True
+    # ard_thread.start()
 
 import logging
 
